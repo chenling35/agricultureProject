@@ -1,0 +1,2802 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>农产品价格分析平台 - 市场洞察</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Rubik:wght@700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom CSS for deeper customization and animations - LIGHT THEME */
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%); /* Light gray gradient for a clean, modern feel */
+            background-attachment: fixed;
+            color: #374151; /* Dark gray text for contrast */
+            overflow-x: hidden; /* Prevent horizontal scroll from background elements */
+        }
+
+        /* Keyframes for animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes pulsate {
+            0% { box-shadow: 0 0 10px rgba(79, 70, 229, 0.4); }
+            50% { box-shadow: 0 0 20px rgba(79, 70, 229, 0.8); }
+            100% { box-shadow: 0 0 10px rgba(79, 70, 229, 0.4); }
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes rotate3D {
+            from { transform: rotateY(0deg) rotateX(0deg); }
+            to { transform: rotateY(360deg) rotateX(360deg); }
+        }
+        
+        /* Background decorative elements animation */
+        .bg-element-1 {
+            animation: fadeInDown 2s ease-out forwards, rotate3D 30s linear infinite;
+        }
+        .bg-element-2 {
+            animation: fadeInUp 2s ease-out forwards 0.5s, rotate3D 40s linear reverse infinite;
+        }
+
+        .animate-fade-in-down { animation: fadeInDown 0.8s ease-out forwards; }
+        .animate-fade-in-up { animation: fadeInUp 0.8s ease-out forwards; }
+        .animate-slide-in-left { animation: slideInLeft 0.7s ease-out forwards; }
+        .animate-slide-in-right { animation: slideInRight 0.7s ease-out forwards; }
+        .animate-pulsate { animation: pulsate 2s infinite ease-in-out; }
+        .animate-gradient-shift { animation: gradientShift 10s ease infinite; background-size: 200% 200%; }
+
+        /* General card styling for light theme */
+        .glass-card {
+            background-color: rgba(255, 255, 255, 0.7); /* Light semi-transparent */
+            backdrop-filter: blur(10px); /* Frosted glass effect */
+            -webkit-backdrop-filter: blur(10px); /* Safari support */
+            border: 1px solid rgba(229, 231, 235, 0.8); /* Subtle light border */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), inset 0 0 5px rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease-in-out;
+        }
+        .glass-card:hover {
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15), inset 0 0 10px rgba(255, 255, 255, 0.7);
+            transform: translateY(-3px);
+        }
+
+        /* Input and Select elements styling - REFINED for light theme */
+        select, input[type="date"] {
+            background-color: #f9fafb; /* Lighter input background */
+            color: #374151; /* Dark text color */
+            border: 1px solid #d1d5db; /* Light border */
+            padding: 0.75rem 1rem; /* Increased padding */
+            border-radius: 0.5rem; /* Rounded corners */
+            transition: all 0.2s ease-in-out;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle inner shadow */
+            -webkit-appearance: none; /* Remove default browser styling */
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%236b7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M6 8l4 4 4-4'%3e%3c/path%3e%3c/svg%3e"); /* Custom arrow for select (darker for light theme) */
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.25em; /* Size of the arrow */
+        }
+        select:focus, input[type="date"]:focus {
+            border-color: #4f46e5; /* Indigo focus ring */
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3), inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            background-color: #ffffff; /* White on focus */
+            outline: none; /* Remove default outline */
+        }
+        /* Specific styling for date input icon for light theme */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: none; /* No filter for light theme to show default icon */
+            color: #374151;
+            cursor: pointer;
+        }
+        input[type="date"]::-moz-calendar-picker-indicator {
+            filter: none;
+            color: #374151;
+            cursor: pointer;
+        }
+
+
+        /* Buttons with strong gradients and hover effects - REFINED for light theme */
+        .btn-fancy {
+            background-image: linear-gradient(to right, var(--tw-gradient-stops));
+            background-size: 250% auto; /* Increased size for smoother shift */
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2); /* Prominent shadow */
+        }
+        .btn-fancy:hover {
+            background-position: right center; /* Shift gradient on hover */
+            transform: translateY(-4px) scale(1.03); /* More pronounced lift and scale */
+            box-shadow: 0 12px 35px rgba(0,0,0,0.3); /* Even larger shadow on hover */
+        }
+
+        /* Spinner styling */
+        .spinner-border {
+            border-color: #374151; /* Dark spinner for light theme */
+            border-right-color: transparent;
+        }
+
+        /* Status message styling */
+        #statusMessage.alert-info { background-color: rgba(99, 102, 241, 0.1); color: #4f46e5; border-color: #a5b4fc; }
+        #statusMessage.alert-success { background-color: rgba(16, 185, 129, 0.1); color: #10b981; border-color: #6ee7b7; }
+        #statusMessage.alert-danger { background-color: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: #fca5a5; }
+
+        /* Price change indicators */
+        .price-up { color: #dc2626; } /* Red for up */
+        .price-down { color: #10b981; } /* Green for down */
+        .price-neutral { color: #6b7280; } /* Gray for neutral */
+
+        /* ECharts container styling */
+        #chinaMapContainer, #priceLineChartContainer, #avgPriceBarChartContainer, #avgChangeBarChartContainer, #priceStabilityBarChartContainer, #priceIncreaseRankingChartContainer {
+            min-height: 500px; /* Base height for charts */
+            background-color: rgba(255, 255, 255, 0.8); /* Lighter background for charts */
+            border: 1px solid rgba(229, 231, 235, 0.8);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        #chinaMapContainer {
+            height: 800px; /* Tall map */
+        }
+        /* Auxiliary charts are smaller */
+        #avgPriceBarChartContainer, #avgChangeBarChartContainer, #priceStabilityBarChartContainer, #priceIncreaseRankingChartContainer {
+            min-height: 300px;
+        }
+
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #e5e7eb; /* Light track */
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #9ca3af; /* Medium gray thumb */
+            border-radius: 10px;
+            border: 2px solid #e5e7eb;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4f46e5; /* Indigo hover color */
+        }
+
+        /* Sidebar specific styles */
+        .filter-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 380px; /* Adjust width as needed */
+            height: 100%;
+            background-color: rgba(249, 250, 251, 0.95); /* Even lighter, more opaque */
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-right: 1px solid rgba(229, 231, 235, 0.8); /* Lighter border */
+            transform: translateX(-100%); /* Initially hidden */
+            transition: transform 0.4s ease-in-out;
+            z-index: 1000;
+            overflow-y: auto; /* Enable scrolling if content overflows */
+            padding: 2.5rem; /* Padding inside the sidebar */
+            box-shadow: 5px 0 20px rgba(0, 0, 0, 0.15); /* Shadow for depth */
+        }
+
+        .filter-sidebar.sidebar-open {
+            transform: translateX(0); /* Slide in */
+        }
+
+        /* Trigger area for hover */
+        .left-edge-trigger {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px; /* Width of the trigger zone */
+            height: 100%;
+            z-index: 1001; /* Above the sidebar to capture hover first */
+            cursor: pointer;
+        }
+        
+        /* Adjust main content for sidebar */
+        .content-module {
+            padding-left: 2rem;
+        }
+        @media (min-width: 1024px) {
+            .content-module {
+                padding-left: 3rem;
+            }
+        }
+
+        /* Header Text Specific Styles for Light Theme */
+        .text-shadow-subtle {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* A soft, dark shadow for depth */
+        }
+
+        .text-shadow-light {
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1); /* Even lighter shadow for paragraph */
+        }
+
+        /* Header section background - Custom CSS for More Complex Gradient (Light Theme) */
+        header {
+            background: linear-gradient(135deg, 
+                #a7f3d0 0%,   /* Light Green */
+                #6ee7b7 25%,  /* Medium Green */
+                #34d399 50%,  /* Darker Green */
+                #059669 75%,  /* Deep Green */
+                #047857 100%  /* Darkest Green */
+            );
+        }
+
+        /* NEW: Button group specific styles for light theme */
+        .module-switcher-btn {
+            @apply px-8 py-4 text-xl font-semibold border-2 transition-colors duration-200;
+            background-color: rgba(255, 255, 255, 0.8); /* Light semi-transparent background */
+            border-color: rgba(209, 213, 219, 0.8); /* Light border */
+            color: #374151; /* Dark text */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .module-switcher-btn:first-child {
+            @apply rounded-l-full; /* Left-most button rounded on left */
+        }
+
+        .module-switcher-btn:last-child {
+            @apply rounded-r-full; /* Right-most button rounded on right */
+        }
+
+        .module-switcher-btn.active {
+            @apply bg-gradient-to-r from-indigo-600 to-purple-700 text-white border-indigo-700;
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
+            transform: scale(1.02);
+            z-index: 1; /* Bring active button slightly forward */
+        }
+
+        .module-switcher-btn:not(.active):hover {
+            background-color: rgba(240, 244, 248, 0.9); /* Slightly darker light on hover */
+            border-color: rgba(79, 70, 229, 0.6); /* Indigo border on hover */
+            color: #1f2937; /* Darker text on hover */
+            transform: translateY(-2px); /* Slight lift */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Remove default button focus outline to rely on custom styles */
+        .module-switcher-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.6);
+        }
+
+    </style>
+</head>
+<body class="relative">
+    <div class="absolute top-0 left-0 w-80 h-80 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse bg-element-1"></div>
+    <div class="absolute bottom-1/4 right-0 w-96 h-96 bg-gradient-to-tl from-purple-400 to-pink-500 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse delay-700 bg-element-2"></div>
+    <div class="absolute top-1/2 left-1/4 w-72 h-72 bg-gradient-to-r from-teal-400 to-green-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse delay-1000 bg-element-1"></div>
+    <div class="absolute bottom-0 left-1/3 w-64 h-64 bg-gradient-to-tr from-yellow-300 to-orange-400 rounded-full mix-blend-multiply filter blur-3xl opacity-25 animate-pulse delay-1500 bg-element-2"></div>
+    <div class="absolute top-1/4 right-1/4 w-72 h-72 bg-gradient-to-bl from-cyan-400 to-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-25 animate-pulse delay-2000 bg-element-1"></div>
+
+
+    <header class="relative py-24 text-center overflow-hidden shadow-2xl animate-gradient-shift z-10">
+        <div class="absolute inset-0 z-0 opacity-10">
+            </div>
+        <div class="container mx-auto px-6 relative z-10">
+            <h1 class="font-['Rubik'] text-7xl font-extrabold tracking-tight mb-6 leading-tight animate-fade-in-down text-white text-shadow-subtle">
+                市场脉动：农产品智能分析平台
+            </h1>
+            <p class="text-2xl opacity-90 leading-relaxed max-w-4xl mx-auto animate-fade-in-up text-gray-200 text-shadow-light">
+                深度挖掘农产品价格数据，提供区域洞察与趋势预测，赋能您的商业决策。
+            </p>
+            
+            <div class="flex justify-center mt-12 mb-4">
+                <button id="dataExploreBtn" class="module-switcher-btn active">数据探索</button>
+                <button id="marketReportBtn" class="module-switcher-btn">市场报表</button>
+                <button id="pricePredictionBtn" class="module-switcher-btn">价格预测</button>
+            </div>
+        </div>
+    </header>
+    
+    <div id="dataExplorationModule" class="container mx-auto px-4 py-16 relative z-20 content-module">
+        <div id="statusMessage" class="alert font-semibold text-center py-4 px-6 rounded-xl shadow-lg mb-10"></div>
+
+        <div class="grid grid-cols-1 gap-12 mt-12">
+            <div id="chinaMapContainer" class="glass-card p-8 rounded-2xl overflow-hidden animate-fade-in-up" style="display: none;"></div>
+            <div id="priceLineChartContainer" class="glass-card p-8 rounded-2xl overflow-hidden animate-fade-in-up delay-100" style="display: none;"></div>
+            
+            <div id="auxiliaryChartsRow" class="grid grid-cols-1 gap-8" style="display: none;">
+                <div id="avgPriceBarChartContainer" class="glass-card p-6 rounded-2xl animate-fade-in-up delay-200 min-h-[300px]"></div>
+                <div id="avgChangeBarChartContainer" class="glass-card p-6 rounded-2xl animate-fade-in-up delay-300 min-h-[300px]"></div>
+                <div id="priceStabilityBarChartContainer" class="glass-card p-6 rounded-2xl animate-fade-in-up delay-400 min-h-[300px]"></div>
+            </div>
+
+            <div id="priceTableContainer" class="table-responsive glass-card mt-8 rounded-2xl overflow-hidden animate-fade-in-up delay-200" style="display: none;">
+                <table class="w-full text-left table-auto">
+                    <thead>
+                        <tr class="bg-gradient-to-r from-gray-200 to-gray-300 text-gray-800 text-lg font-semibold uppercase tracking-wider">
+                            <th class="px-6 py-4">蔬菜种类</th>
+                            <th class="px-6 py-4">区域</th>
+                            <th class="px-6 py-4">市场</th>
+                            <th class="px-6 py-4">价格(元/公斤)</th>
+                            <th class="px-6 py-4">环比涨跌(%)</th>
+                            <th class="px-6 py-4">日期</th>
+                        </tr>
+                    </thead>
+                    <tbody id="priceTableBody" class="divide-y divide-gray-200 text-gray-700">
+                        <tr><td colspan="6" class="px-6 py-8 text-center text-gray-500 text-base">请点击查询按钮加载数据</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="marketReportModule" class="container mx-auto px-4 py-16 relative z-20 content-module" style="display: none;">
+        <h2 class="text-4xl font-bold text-center text-gray-800 mb-10 text-shadow-subtle">
+            市场报表模块: <span id="reportMarketName" class="text-indigo-600"></span> - <span id="reportYear" class="text-indigo-600"></span> 年度概览
+        </h2>
+        <div id="marketReportContent" class="grid grid-cols-1 gap-10">
+            <!-- 关键指标 -->
+            <div class="glass-card p-8 rounded-2xl animate-fade-in-up delay-100">
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4 border-b border-gray-300 pb-2">关键价格指标</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+                    <div class="p-4 bg-gray-100 rounded-lg shadow-inner">
+                        <p class="text-lg text-gray-600">所有蔬菜平均价格</p>
+                        <p id="avgOverallPrice" class="text-3xl font-bold text-blue-600 mt-2">-- 元/公斤</p>
+                    </div>
+                    <div class="p-4 bg-gray-100 rounded-lg shadow-inner">
+                        <p class="text-lg text-gray-600">价格波动性 (标准差)</p>
+                        <p id="overallStdDev" class="text-3xl font-bold text-purple-600 mt-2">--</p>
+                    </div>
+                    <div class="p-4 bg-gray-100 rounded-lg shadow-inner">
+                        <p class="text-lg text-gray-600">平均价格涨跌幅</p>
+                        <p id="avgChangeOverall" class="text-3xl font-bold text-green-600 mt-2">-- %</p>
+                    </div>
+                    <div class="p-4 bg-gray-100 rounded-lg shadow-inner">
+                        <p class="text-lg text-gray-600">价格上涨蔬菜种类数量</p>
+                        <p id="varietyUpCount" class="text-3xl font-bold text-red-600 mt-2">-- 种</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 图表区域 -->
+            <div id="marketReportCharts" class="grid grid-cols-1 gap-8">
+                <div id="monthlyPriceTrendChartContainer" class="glass-card p-8 rounded-2xl animate-fade-in-up delay-200 min-h-[400px]"></div>
+                
+                <!-- Row for Annual Avg Price Ranking and Top 5 Price Pie Chart -->
+                <div class="grid grid-cols-1 lg:grid-cols-10 gap-8">
+                    <div id="annualAvgPriceRankingChartContainer" class="glass-card p-8 rounded-2xl animate-fade-in-up delay-300 min-h-[400px] col-span-7"></div>
+                    <div id="top5PricePieChartContainer" class="glass-card p-8 rounded-2xl animate-fade-in-up delay-300 min-h-[400px] col-span-3"></div>
+                </div>
+
+                <!-- NEW: Row for Price Stability Ranking and Top 5 Price Stability Pie Chart -->
+                <div class="grid grid-cols-1 lg:grid-cols-10 gap-8">
+                    <div id="priceStabilityRankingChartContainer" class="glass-card p-8 rounded-2xl animate-fade-in-up delay-400 min-h-[400px] col-span-7"></div>
+                    <div id="top5StabilityPieChartContainer" class="glass-card p-8 rounded-2xl animate-fade-in-up delay-400 min-h-[400px] col-span-3"></div>
+                </div>
+
+                <div id="priceIncreaseRankingChartContainer" class="glass-card p-8 rounded-2xl animate-fade-in-up delay-500 min-h-[400px]"></div>
+            </div>
+
+            <!-- 文字分析区域 -->
+            <div class="glass-card p-8 rounded-2xl animate-fade-in-up delay-500">
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4 border-b border-gray-300 pb-2">市场年度价格总结与洞察</h3>
+                <div id="marketReportSummary" class="text-gray-700 text-lg leading-relaxed">
+                    <p class="mb-4">根据您选择的市场和年份数据，以下是针对 <span id="summaryMarketName" class="font-semibold text-indigo-600"></span> 在 <span id="summaryYear" class="font-semibold text-indigo-600"></span> 年度的农产品价格市场分析报告：</p>
+                    <h4 class="text-xl font-semibold text-gray-800 mb-2">1. 整体价格表现</h4>
+                    <p class="mb-4">在过去的一年里，该市场农产品的整体平均价格为 <span class="font-bold text-blue-600" id="summaryAvgOverallPrice">--</span> 元/公斤。市场价格的波动性（标准差）为 <span class="font-bold text-purple-600" id="summaryOverallStdDev">--</span>，显示了该市场价格的相对稳定性或活跃度。</p>
+                    <h4 class="text-xl font-semibold text-gray-800 mb-2">2. 主要品种价格趋势</h4>
+                    <p class="mb-4">（此处将根据图表数据生成对月度价格趋势和各品种年度平均价格的详细分析，例如：）例如，<span class="font-bold">番茄</span> 在夏季通常表现出较低的价格，在冬季价格会有显著上涨，而 <span class="font-bold">土豆</span> 的价格则相对更为稳定。</p>
+                    <h4 class="text-xl font-semibold text-gray-800 mb-2">3. 价格稳定性洞察</h4>
+                    <p class="mb-4">（此处将根据价格波动性排名图表生成分析，例如：）通过分析各品种的价格标准差，我们可以发现 <span class="font-bold text-green-600">白菜</span> 的价格波动性最小，使其成为相对稳定的交易选择；而 <span class="font-bold text-red-600">辣椒</span> 的价格波动性较大，可能存在更高的风险或利润空间。</p>
+                     <h4 class="text-xl font-semibold text-gray-800 mb-2">4. 价格上涨品种分析</h4>
+                    <p class="mb-4">（此处将根据价格上涨排名图表生成分析，例如：）在过去一年中，有 <span class="font-bold text-red-600" id="summaryVarietyUpCount">--</span> 种蔬菜价格呈现上涨趋势，其中 <span class="font-bold text-red-600" id="summaryTopIncreasingVariety">--</span> 的上涨幅度最大，平均上涨了 <span class="font-bold text-red-600" id="summaryTopIncreasePercentage">--</span>%。投资者和采购商应密切关注这些品种。</p>
+                    <h4 class="text-xl font-semibold text-gray-800 mb-2">5. 建议与展望</h4>
+                    <p class="mb-4">（此处将基于上述分析提供建议，例如：）建议采购商在价格低谷期（如特定蔬菜的丰产季节）进行储备。对于供应商，了解价格波动性有助于优化种植和销售计划。预计未来一年，该市场价格将继续受到季节性因素和供需变化的影响。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW: Price Prediction Module -->
+    <div id="pricePredictionModule" class="container mx-auto px-4 py-16 relative z-20 content-module" style="display: none;">
+        <h2 class="text-4xl font-bold text-center text-gray-800 mb-10 text-shadow-subtle">
+            价格预测模块
+        </h2>
+        <div id="pricePredictionContent" class="grid grid-cols-1 gap-10">
+            <div class="glass-card p-8 rounded-2xl animate-fade-in-up delay-100">
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4 border-b border-gray-300 pb-2">预测功能待定</h3>
+                <p class="text-lg text-gray-600">此模块将提供农产品价格预测功能。具体内容将在后续版本中补充。</p>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="filterSidebar" class="filter-sidebar sidebar-open"> <div id="sidebarContent" class="p-4 rounded-3xl"> <h2 class="text-4xl font-bold text-center text-indigo-700 mb-10 border-b-2 border-indigo-400 pb-4">
+                数据筛选与探索
+            </h2>
+
+            <div class="grid grid-cols-1 gap-8 mb-12">
+                <div id="productLocationFilterGroup" class="glass-card p-6 rounded-xl animate-fade-in-up delay-300">
+                    <h3 class="text-xl font-semibold text-gray-700 mb-4 pb-2 border-b border-gray-300">产品与区域选择</h3>
+                    <div class="grid grid-cols-1 gap-6">
+                        <div id="vegetableSelectContainer">
+                            <label for="vegetableSelect" class="block text-sm font-semibold text-gray-600 mb-2">选择蔬菜种类:</label>
+                            <select class="block w-full px-4 py-3 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-inner transition duration-200 ease-in-out" id="vegetableSelect">
+                            </select>
+                        </div>
+                        <div id="regionSelectContainer">
+                            <label for="regionSelect" class="block text-sm font-semibold text-gray-600 mb-2">选择区域:</label>
+                            <select class="block w-full px-4 py-3 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-inner transition duration-200 ease-in-out" id="regionSelect">
+                                <option value="all" selected>所有区域</option>
+                            </select>
+                        </div>
+                        <div id="marketSelectContainer">
+                            <label for="marketSelect" class="block text-sm font-semibold text-gray-600 mb-2">选择市场:</label>
+                            <select class="block w-full px-4 py-3 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-inner transition duration-200 ease-in-out" id="marketSelect">
+                                <option value="all" selected>所有市场</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="dateFilterGroup" class="glass-card p-6 rounded-xl animate-fade-in-up delay-400">
+                    <h3 class="text-xl font-semibold text-gray-700 mb-4 pb-2 border-b border-gray-300">日期范围</h3>
+                    <div class="grid grid-cols-1 gap-6">
+                        <div id="daysSelectContainer">
+                            <label for="daysSelect" class="block text-sm font-semibold text-gray-600 mb-2">最近天数:</label>
+                            <select class="block w-full px-4 py-3 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-inner transition duration-200 ease-in-out" id="daysSelect">
+                                <option value="7" selected>最近7天</option>
+                                <option value="30">最近30天</option>
+                                <option value="90">最近90天</option>
+                                <option value="365">最近1年</option>
+                                <option value="custom">自定义日期</option>
+                            </select>
+                        </div>
+                        <!-- New Date Filter Controls for Market Report Module -->
+                        <div id="marketReportYearSelectContainer" style="display: none;">
+                            <label for="marketReportYearSelect" class="block text-sm font-semibold text-gray-600 mb-2">选择年份:</label>
+                            <select class="block w-full px-4 py-3 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-inner transition duration-200 ease-in-out" id="marketReportYearSelect">
+                            </select>
+                        </div>
+                        <div id="marketReportQuarterSelectContainer" style="display: none;">
+                            <label for="marketReportQuarterSelect" class="block text-sm font-semibold text-gray-600 mb-2">选择季度:</label>
+                            <select class="block w-full px-4 py-3 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-inner transition duration-200 ease-in-out" id="marketReportQuarterSelect">
+                                <option value="all" selected>所有季度</option>
+                                <option value="Q1">第一季度 (1-3月)</option>
+                                <option value="Q2">第二季度 (4-6月)</option>
+                                <option value="Q3">第三季度 (7-9月)</option>
+                                <option value="Q4">第四季度 (10-12月)</option>
+                            </select>
+                        </div>
+                        <div id="marketReportMonthSelectContainer" style="display: none;">
+                            <label for="marketReportMonthSelect" class="block text-sm font-semibold text-gray-600 mb-2">选择月份:</label>
+                            <select class="block w-full px-4 py-3 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-inner transition duration-200 ease-in-out" id="marketReportMonthSelect">
+                                <!-- Months will be populated by JavaScript -->
+                            </select>
+                        </div>
+                        <!-- Original Custom Date Inputs -->
+                        <div>
+                            <label for="startDate" class="block text-sm font-semibold text-gray-600 mb-2">开始日期:</label>
+                            <input type="date" class="block w-full px-4 py-3 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-inner transition duration-200 ease-in-out" id="startDate" disabled>
+                        </div>
+                        <div>
+                            <label for="endDate" class="block text-sm font-semibold text-gray-600 mb-2">结束日期:</label>
+                            <input type="date" class="block w-full px-4 py-3 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-inner transition duration-200 ease-in-out" id="endDate" disabled>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="actionButtonGroup" class="glass-card p-6 rounded-xl animate-fade-in-up delay-500">
+                    <h3 class="text-xl font-semibold text-gray-700 mb-4 pb-2 border-b border-gray-300">操作</h3>
+                    <div class="flex flex-col sm:flex-row gap-6 justify-center">
+                        <button type="button" class="btn-fancy flex-1 py-4 rounded-xl font-bold text-xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 text-white from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 flex items-center justify-center space-x-2" id="queryBtn">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                            <span>查询数据</span>
+                            <span class="spinner-border w-6 h-6 ml-2" role="status" aria-hidden="true" style="display: none;"></span>
+                        </button>
+                        <button type="button" class="btn-fancy flex-1 py-4 rounded-xl font-bold text-xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 text-white from-green-500 to-teal-600 hover:from-green-600 hover:to-teal-700 flex items-center justify-center space-x-2" id="exportBtn">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            <span>导出报告</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="leftEdgeTrigger" class="left-edge-trigger"></div>
+
+
+    <footer class="py-10 text-center text-gray-500 text-sm mt-20 z-10 relative">
+        <p>&copy; 2025 智慧农产品分析平台. All rights reserved.1.0</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
+    <script>
+        // Wrap the entire script in an IIFE to create a new scope and avoid redeclaration errors
+        (function() {
+            // Define the common color palette for ECharts - ADJUSTED FOR LIGHT THEME
+            const ECHARTS_COLOR_PALETTE = [
+                '#4f46e5', /* Indigo */
+                '#f59e0b', /* Amber */
+                '#dc2626', /* Red */
+                '#10b981', /* Green */
+                '#9333ea', /* Purple */
+                '#0ea5e9', /* Sky */
+                '#e879f9', /* Fuchsia */
+                '#f97316', /* Orange */
+                '#22c55e', /* Emerald */
+                '#3b82f6'  /* Blue */
+            ];
+
+            // JavaScript logic adjusted for strict map/line chart switching
+            const vegetableSelect = document.getElementById('vegetableSelect');
+            const regionSelect = document.getElementById('regionSelect');
+            const marketSelect = document.getElementById('marketSelect');
+            const daysSelect = document.getElementById('daysSelect');
+            const startDateInput = document.getElementById('startDate');
+            const endDateInput = document.getElementById('endDate');
+            const queryBtn = document.getElementById('queryBtn');
+            const exportBtn = document.getElementById('exportBtn');
+            const priceTableBody = document.getElementById('priceTableBody');
+            const priceTableContainer = document.getElementById('priceTableContainer'); 
+
+            const querySpinner = queryBtn.querySelector('.spinner-border');
+            const chinaMapContainer = document.getElementById('chinaMapContainer');
+            const priceLineChartContainer = document.getElementById('priceLineChartContainer');
+            const statusMessageDiv = document.getElementById('statusMessage');
+            const auxiliaryChartsRow = document.getElementById('auxiliaryChartsRow'); // New: Auxiliary charts container
+            
+            // ECharts instances (declared with let so they can be reassigned/cleared)
+            let myChart = null; // ECharts instance (map)
+            let lineChart = null; // ECharts instance (line chart)
+            let avgPriceBarChart = null; // ECharts instance (bar chart for average price in data exploration)
+            let avgChangeBarChart = null; // ECharts instance (bar chart for average change in data exploration)
+            let priceStabilityBarChart = null; // ECharts instance (bar chart for price stability in data exploration)
+            let priceIncreaseRankingChart = null; // ECharts instance (bar chart for price increase ranking in market report)
+            let monthlyPriceTrendChart = null; // ECharts instance (line chart for monthly trends in market report)
+            let annualAvgPriceRankingChart = null; // ECharts instance (bar chart for annual avg price ranking in market report)
+            let priceStabilityRankingChart = null; // ECharts instance (bar chart for price stability ranking in market report)
+            let top5PricePieChart = null; // ECharts instance (pie chart for top 5 prices in market report)
+            let top5StabilityPieChart = null; // ECharts instance (pie chart for top 5 stability in market report)
+
+
+            // --- Sidebar elements ---
+            const filterSidebar = document.getElementById('filterSidebar');
+            const leftEdgeTrigger = document.getElementById('leftEdgeTrigger');
+            const sidebarContent = document.getElementById('sidebarContent'); // Get the content wrapper
+            // Get the individual filter groups
+            const productLocationFilterGroup = document.getElementById('productLocationFilterGroup');
+            const dateFilterGroup = document.getElementById('dateFilterGroup');
+            const actionButtonGroup = document.getElementById('actionButtonGroup');
+            // Get the individual select containers for reordering
+            const vegetableSelectContainer = document.getElementById('vegetableSelectContainer');
+            const regionSelectContainer = document.getElementById('regionSelectContainer');
+            const marketSelectContainer = document.getElementById('marketSelectContainer');
+            const daysSelectContainer = document.getElementById('daysSelectContainer'); // 新增：天数选择容器
+
+            // New Date Filter Controls for Market Report Module
+            const marketReportYearSelectContainer = document.getElementById('marketReportYearSelectContainer');
+            const marketReportQuarterSelectContainer = document.getElementById('marketReportQuarterSelectContainer');
+            const marketReportMonthSelectContainer = document.getElementById('marketReportMonthSelectContainer');
+            const marketReportYearSelect = document.getElementById('marketReportYearSelect');
+            const marketReportQuarterSelect = document.getElementById('marketReportQuarterSelect');
+            const marketReportMonthSelect = document.getElementById('marketReportMonthSelect');
+
+            // New elements for Market Report Module content
+            const marketReportContentDiv = document.getElementById('marketReportContent');
+            const reportMarketNameSpan = document.getElementById('reportMarketName');
+            const reportYearSpan = document.getElementById('reportYear');
+            const avgOverallPriceSpan = document.getElementById('avgOverallPrice');
+            const overallStdDevSpan = document.getElementById('overallStdDev');
+            const avgChangeOverallSpan = document.getElementById('avgChangeOverall');
+            const varietyUpCountSpan = document.getElementById('varietyUpCount');
+            const monthlyPriceTrendChartContainer = document.getElementById('monthlyPriceTrendChartContainer');
+            const annualAvgPriceRankingChartContainer = document.getElementById('annualAvgPriceRankingChartContainer');
+            const priceStabilityRankingChartContainer = document.getElementById('priceStabilityRankingChartContainer'); // Correct container for Market Report
+            const marketReportSummaryDiv = document.getElementById('marketReportSummary');
+            const summaryMarketNameSpan = document.getElementById('summaryMarketName');
+            const summaryYearSpan = document.getElementById('summaryYear');
+            const summaryAvgOverallPriceSpan = document.getElementById('summaryAvgOverallPrice');
+            const summaryOverallStdDevSpan = document.getElementById('summaryOverallStdDev');
+            const summaryVarietyUpCountSpan = document.getElementById('summaryVarietyUpCount'); // New
+            const summaryTopIncreasingVarietySpan = document.getElementById('summaryTopIncreasingVariety'); // New
+            const summaryTopIncreasePercentageSpan = document.getElementById('summaryTopIncreasePercentage'); // New
+            const top5PricePieChartContainer = document.getElementById('top5PricePieChartContainer'); // Get the new pie chart container
+            const top5StabilityPieChartContainer = document.getElementById('top5StabilityPieChartContainer'); // Get the new stability pie chart container
+
+            // NEW: Elements for Price Prediction Module
+            const pricePredictionBtn = document.getElementById('pricePredictionBtn');
+            const pricePredictionModule = document.getElementById('pricePredictionModule');
+
+
+            // --- New Module Switching Elements ---
+            const dataExploreBtn = document.getElementById('dataExploreBtn');
+            const marketReportBtn = document.getElementById('marketReportBtn');
+            const dataExplorationModule = document.getElementById('dataExplorationModule');
+            const marketReportModule = document.getElementById('marketReportModule');
+
+            let allAreas = []; // Store all areas once loaded
+            let allVarieties = []; // Store all varieties once loaded
+
+            // --- Helper function: Update status message ---
+            function updateStatusMessage(message, type = 'info') {
+                statusMessageDiv.textContent = message;
+                statusMessageDiv.className = `alert alert-${type}`; // Uses custom alert classes
+                statusMessageDiv.style.display = 'block';
+                console.log(`[STATUS] ${type.toUpperCase()}: ${message}`);
+            }
+
+            // --- Helper function: Hide status message ---
+            function hideStatusMessage() {
+                statusMessageDiv.style.display = 'none';
+                statusMessageDiv.textContent = '';
+                statusMessageDiv.className = 'alert';
+            }
+
+            // --- Initialize date input fields ---
+            function setInitialDates() {
+                const today = new Date();
+                const sevenDaysAgo = new Date(today);
+                sevenDaysAgo.setDate(today.getDate() - 7);
+
+                endDateInput.value = today.toISOString().split('T')[0];
+                startDateInput.value = sevenDaysAgo.toISOString().split('T')[0];
+            }
+
+            // --- Load dropdown data ---
+            async function loadSelectOptions() {
+                updateStatusMessage('正在加载筛选条件...', 'info');
+                try {
+                    // Load Varieties
+                    const varietyResponse = await fetch('/api/varieties');
+                    const varietyData = await varietyResponse.json();
+                    if (varietyData.varieties && varietyData.varieties.length > 0) {
+                        allVarieties = varietyData.varieties; // Store all varieties
+                        // populateVegetableSelect is now called by setActiveModule
+                    } else {
+                        vegetableSelect.innerHTML = '<option value="">无蔬菜种类数据</option>';
+                        console.warn("API '/api/varieties' returned empty or invalid data.");
+                    }
+
+                    // Load Areas
+                    const areaResponse = await fetch('/api/areas');
+                    const areaData = await areaResponse.json();
+                    if (areaData.areas) {
+                        allAreas = areaData.areas; // Store all areas
+                        // populateRegionSelect is now called by setActiveModule
+                    } else {
+                        console.warn("API '/api/areas' returned empty or invalid data.");
+                    }
+                    updateStatusMessage('筛选条件加载完成。', 'success');
+
+                } catch (error) {
+                    console.error('Failed to load dropdown options:', error);
+                    updateStatusMessage('加载筛选条件失败，请检查后端服务是否运行。', 'danger');
+                }
+            }
+
+            // Helper to populate vegetable select
+            function populateVegetableSelect(varieties, selectedValue = '') {
+                vegetableSelect.innerHTML = '';
+                // Add the "所有蔬菜" option at the beginning
+                const allOption = document.createElement('option');
+                allOption.value = 'all'; // Or a specific keyword for "all"
+                allOption.textContent = '所有蔬菜';
+                vegetableSelect.appendChild(allOption);
+
+                varieties.forEach(variety => {
+                    const option = document.createElement('option');
+                    option.value = variety;
+                    option.textContent = variety;
+                    vegetableSelect.appendChild(option);
+                });
+                // Set the selected value
+                if (selectedValue) {
+                    vegetableSelect.value = selectedValue;
+                } else {
+                    // If no selectedValue provided, default to 'all' (所有蔬菜)
+                    vegetableSelect.value = 'all';
+                }
+            }
+
+            // Helper to populate region select
+            function populateRegionSelect(areas, selectedValue = 'all') {
+                regionSelect.innerHTML = '<option value="all">所有区域</option>';
+                areas.forEach(area => {
+                    const option = document.createElement('option');
+                    option.value = area;
+                    option.textContent = area;
+                    regionSelect.appendChild(option);
+                });
+                regionSelect.value = selectedValue; // Set selected value
+            }
+
+
+            // --- Load Markets based on selected Area ---
+            async function loadMarketsByArea(selectedArea) {
+                marketSelect.innerHTML = '<option value="all">所有市场</option>';
+                if (selectedArea === 'all' || selectedArea === '') {
+                    console.log("[LOAD_MARKETS] Area is 'all' or empty, markets set to '所有市场' only.");
+                    return;
+                }
+                try {
+                    console.log(`[LOAD_MARKETS] Fetching markets for area: ${selectedArea}`);
+                    const marketResponse = await fetch(`/api/markets?area=${encodeURIComponent(selectedArea)}`);
+                    const marketData = await marketResponse.json();
+                    console.log("[LOAD_MARKETS] Received market data:", marketData);
+                    if (marketData.markets && marketData.markets.length > 0) {
+                        marketData.markets.forEach(market => {
+                            const option = document.createElement('option');
+                            option.value = market;
+                            option.textContent = market;
+                            marketSelect.appendChild(option);
+                        });
+                        console.log("[LOAD_MARKETS] Markets populated successfully.");
+                    } else {
+                        console.warn(`[LOAD_MARKETS] API '/api/markets?area=${selectedArea}' returned empty or invalid data. No specific markets to add.`);
+                    }
+                } catch (error) {
+                    console.error('[LOAD_MARKETS_ERROR] Failed to load market options:', error);
+                }
+            }
+
+            // --- Query Price Data and Update Charts/Table ---
+            async function queryPrices() {
+                queryBtn.disabled = true;
+                querySpinner.style.display = 'inline-block';
+                hideStatusMessage();
+
+                // Always hide all display elements initially for Data Exploration
+                chinaMapContainer.style.display = 'none';
+                priceLineChartContainer.style.display = 'none';
+                priceTableContainer.style.display = 'none'; // Hide table container
+                auxiliaryChartsRow.style.display = 'none'; // Hide auxiliary charts row
+                
+                // Clear any previous chart instances
+                // Use echarts.getInstanceByDom to get existing instance or null
+                if (myChart) { myChart.dispose(); myChart = null; }
+                if (lineChart) { lineChart.dispose(); lineChart = null; }
+                if (avgPriceBarChart) { avgPriceBarChart.dispose(); avgPriceBarChart = null; }
+                if (avgChangeBarChart) { avgChangeBarChart.dispose(); avgChangeBarChart = null; }
+                if (priceStabilityBarChart) { priceStabilityBarChart.dispose(); priceStabilityBarChart = null; }
+                if (priceIncreaseRankingChart) { priceIncreaseRankingChart.dispose(); priceIncreaseRankingChart = null; }
+                if (monthlyPriceTrendChart) { monthlyPriceTrendChart.dispose(); monthlyPriceTrendChart = null; }
+                if (annualAvgPriceRankingChart) { annualAvgPriceRankingChart.dispose(); annualAvgPriceRankingChart = null; }
+                if (priceStabilityRankingChart) { priceStabilityRankingChart.dispose(); priceStabilityRankingChart = null; }
+                if (top5PricePieChart) { top5PricePieChart.dispose(); top5PricePieChart = null; }
+                if (top5StabilityPieChart) { top5StabilityPieChart.dispose(); top5StabilityPieChart = null; }
+
+
+                const selectedVariety = vegetableSelect.value;
+                let selectedArea = regionSelect.value; // Use let here as it might be reassigned for the query
+                let selectedMarket = marketSelect.value; // Use let here as it might be reassigned for the query
+
+                // Safeguard against undefined/null/empty string values for dropdowns
+                selectedArea = (selectedArea === undefined || selectedArea === null || selectedArea === '') ? 'all' : selectedArea;
+                selectedMarket = (selectedMarket === undefined || selectedMarket === null || selectedMarket === '') ? 'all' : selectedMarket;
+                
+                console.log(`[DEBUG_QUERY_PARAMS] Current Selection - Variety: ${selectedVariety}, Area: ${selectedArea}, Market: ${selectedMarket}`);
+
+                if (selectedVariety === 'all' && currentActiveModule === 'dataExploration') { // Only restrict 'all vegetables' for data exploration
+                    updateStatusMessage('“所有蔬菜”选项暂不支持聚合查询，请选择一种具体的蔬菜种类进行查询。', 'info');
+                    queryBtn.disabled = false;
+                    querySpinner.style.display = 'none';
+                    return;
+                }
+
+                let startDate = '';
+                let endDate = '';
+
+                // Variables to pass to processMarketReportData for correct calculation of change
+                let currentSelectedYear = null;
+                let currentSelectedQuarter = null;
+                let currentSelectedMonth = null;
+
+                if (currentActiveModule === 'dataExploration' || currentActiveModule === 'pricePrediction') { // Apply custom date logic to Price Prediction as well for now
+                    if (daysSelect.value === 'custom') {
+                        startDate = startDateInput.value;
+                        endDate = endDateInput.value;
+                    } else {
+                        const today = new Date();
+                        endDate = today.toISOString().split('T')[0];
+                        const pastDate = new Date(today);
+                        pastDate.setDate(today.getDate() - parseInt(daysSelect.value)); // Use daysSelect.value here
+                        startDate = pastDate.toISOString().split('T')[0];
+                    }
+                } else if (currentActiveModule === 'marketReport') {
+                    currentSelectedYear = marketReportYearSelect.value;
+                    currentSelectedQuarter = marketReportQuarterSelect.value;
+                    currentSelectedMonth = marketReportMonthSelect.value;
+
+                    if (selectedMarket === 'all') { // Market Report requires a specific market
+                        updateStatusMessage('市场报表模块需要选择一个具体的市场进行查询。', 'info');
+                        queryBtn.disabled = false;
+                        querySpinner.style.display = 'none';
+                        // Hide previous report content
+                        marketReportContentDiv.style.display = 'none';
+                        return;
+                    }
+
+                    // If "所有蔬菜" is selected for Market Report, allow it.
+                    // If a specific vegetable is selected, that's fine too.
+
+                    if (currentSelectedYear === 'all') { // If "all years" is selected, take current year
+                        const currentYear = new Date().getFullYear();
+                        startDate = `${currentYear}-01-01`;
+                        endDate = `${currentYear}-12-31`;
+                    } else {
+                        if (currentSelectedMonth !== 'all') {
+                            // Specific month selected, this takes precedence over quarter
+                            const month = parseInt(currentSelectedMonth);
+                            const year = parseInt(currentSelectedYear);
+                            const firstDay = new Date(year, month - 1, 1);
+                            const lastDay = new Date(year, month, 0); // Last day of the selected month
+                            startDate = firstDay.toISOString().split('T')[0];
+                            endDate = lastDay.toISOString().split('T')[0];
+                        } else if (currentSelectedQuarter !== 'all') {
+                            // Specific quarter selected
+                            const year = parseInt(currentSelectedYear);
+                            let startMonth, endMonth;
+                            if (currentSelectedQuarter === 'Q1') { startMonth = 1; endMonth = 3; }
+                            else if (currentSelectedQuarter === 'Q2') { startMonth = 4; endMonth = 6; }
+                            else if (currentSelectedQuarter === 'Q3') { startMonth = 7; endMonth = 9; }
+                            else if (currentSelectedQuarter === 'Q4') { startMonth = 10; endMonth = 12; }
+
+                            const firstDay = new Date(year, startMonth - 1, 1);
+                            const lastDay = new Date(year, endMonth, 0);
+                            startDate = firstDay.toISOString().split('T')[0];
+                            endDate = lastDay.toISOString().split('T')[0];
+                        } else {
+                            // Only year selected ("所有季度", "所有月份")
+                            const year = parseInt(currentSelectedYear);
+                            startDate = `${year}-01-01`;
+                            endDate = `${year}-12-31`;
+                        }
+                    }
+                }
+
+
+                console.log(`[QUERY] Query parameters: Variety=${selectedVariety}, Area=${selectedArea}, Market=${selectedMarket}, StartDate=${startDate}, EndDate=${endDate}`);
+
+                if (currentActiveModule === 'dataExploration') {
+                    // Determine display modes
+                    const isMapMode = (selectedArea === 'all' && selectedMarket === 'all');
+                    const isDetailedMarketView = (selectedMarket !== 'all'); // Specific market selected, show line chart, aux charts, table
+                    const isRegionalSummaryView = (selectedArea !== 'all' && selectedMarket === 'all'); // Specific region, all markets, show line chart, aux charts, NO table
+
+                    if (isMapMode) {
+                        // --- Map Mode Logic ---
+                        console.log("[QUERY_FLOW] Entering Map Mode.");
+                        const queryParamsMap = new URLSearchParams({
+                            variety: selectedVariety,
+                            startDate: startDate,
+                            endDate: endDate
+                        });
+                        if (daysSelect.value !== 'custom') { // Use daysSelect.value here
+                            queryParamsMap.append('days', daysSelect.value);
+                        }
+
+                        try {
+                            updateStatusMessage('正在加载地图数据...', 'info');
+                            const responseMap = await fetch(`/api/average_prices_by_area?${queryParamsMap.toString()}`);
+                            const dataMap = await responseMap.json();
+                            console.log("[API_RESPONSE_MAP]", dataMap);
+
+                            if (dataMap.error) {
+                                console.error("[MAP_ERROR] Backend returned error (map):", dataMap.error);
+                                updateStatusMessage(`加载地图数据失败: ${dataMap.error}`, 'danger');
+                            } else if (dataMap.average_prices && dataMap.average_prices.length > 0) {
+                                console.log("[MAP_SUCCESS] Successfully fetched map data.");
+                                chinaMapContainer.style.display = 'block'; // Show map
+                                renderChinaMap(dataMap.average_prices);
+                                if (myChart) {
+                                    myChart.resize();
+                                }
+                                updateStatusMessage('已在地图上展示区域平均价格。', 'success');
+                            } else {
+                                console.warn("[MAP_NO_DATA] No regional average price data found for criteria.");
+                                updateStatusMessage('没有找到符合条件的区域平均价格数据。', 'info');
+                            }
+                        } catch (error) {
+                            console.error('[MAP_NETWORK_ERROR] Failed to request map data:', error);
+                            updateStatusMessage(`网络请求失败 (地图): ${error.message || error}`, 'danger');
+                        }
+                    } else if (isDetailedMarketView || isRegionalSummaryView) {
+                        // --- Detailed Charts (and potentially Table) Mode Logic ---
+                        console.log("[QUERY_FLOW] Entering Detailed Charts Mode.");
+                        const queryParamsPrices = new URLSearchParams({
+                            variety: selectedVariety,
+                            area: selectedArea,
+                            market: selectedMarket, // This will be 'all' for RegionalSummaryView, and specific for DetailedMarketView
+                            startDate: startDate,
+                            endDate: endDate
+                        });
+                        if (daysSelect.value !== 'custom') { // Use daysSelect.value here
+                            queryParamsPrices.append('days', daysSelect.value);
+                        }
+
+                        try {
+                            updateStatusMessage('正在加载价格趋势数据和详细分析...', 'info');
+                            const responsePrices = await fetch(`/api/prices?${queryParamsPrices.toString()}`);
+                            const dataPrices = await responsePrices.json();
+                            console.log("[API_RESPONSE_PRICES]", dataPrices);
+
+                            if (dataPrices.error) {
+                                console.error("[PRICES_ERROR] Backend returned error:", dataPrices.error);
+                                updateStatusMessage(`加载数据失败: ${dataPrices.error}`, 'danger');
+                                // Hide relevant charts/table if data failed
+                                priceLineChartContainer.style.display = 'none';
+                                auxiliaryChartsRow.style.display = 'none';
+                                priceTableContainer.style.display = 'none';
+                            } else if (dataPrices.prices && dataPrices.prices.length > 0) {
+                                // Data successfully loaded for charts and potentially table
+                                console.log("[CHARTS_TABLE_SUCCESS] Successfully fetched data for charts and table.");
+                                
+                                priceLineChartContainer.style.display = 'block';
+                                auxiliaryChartsRow.style.display = 'grid'; // Always show aux charts in this combined mode
+                                renderLineChart(dataPrices.prices, selectedMarket);
+                                renderAvgPriceBarChart(dataPrices.prices);
+                                renderAvgChangeBarChart(dataPrices.prices);
+                                renderPriceStabilityBarChart(dataPrices.prices); // This is the data exploration version
+
+                                if (isDetailedMarketView) { // Only show table if a specific market is selected
+                                    priceTableContainer.style.display = 'block';
+                                    priceTableBody.innerHTML = ''; // Clear old data
+                                    dataPrices.prices.forEach(item => {
+                                        const row = priceTableBody.insertRow();
+                                        row.insertCell().textContent = item.variety;
+                                        row.insertCell().textContent = item.area;
+                                        row.insertCell().textContent = item.market;
+                                        row.insertCell().textContent = parseFloat(item.price).toFixed(2); // Ensure price is parsed and formatted
+
+                                        const changeCell = row.insertCell();
+                                        const changeValue = parseFloat(item.change); // Ensure change is parsed
+                                        const changeText = isNaN(changeValue) ? 'N/A' : changeValue.toFixed(2); // Handle NaN for display
+
+                                        let className = 'price-neutral';
+                                        let arrowHtml = '';
+
+                                        // Note: Your original logic had negative change value as 'price-up' (increase)
+                                        // and positive as 'price-down' (decrease). I'm preserving this.
+                                        if (!isNaN(changeValue)) {
+                                            if (changeValue < 0) {
+                                                className = 'price-up';
+                                                arrowHtml = ' <span class="arrow">&#x2191;</span>'; // Up arrow
+                                            } else if (changeValue > 0) {
+                                                className = 'price-down';
+                                                arrowHtml = ' <span class="arrow">&#x2193;</span>'; // Down arrow
+                                            }
+                                        }
+                                        changeCell.innerHTML = `<span class="${className}">${changeText}%${arrowHtml}</span>`;
+                                        row.insertCell().textContent = item.time_price;
+                                    });
+                                    updateStatusMessage('已展示价格趋势、辅助分析图表和详细数据。', 'success');
+                                } else { // isRegionalSummaryView: no table
+                                    priceTableContainer.style.display = 'none';
+                                    updateStatusMessage('已展示区域内各市场价格趋势及辅助分析图表。', 'success');
+                                }
+                                
+                            } else {
+                                console.warn("[NO_DETAILED_DATA] No detailed price data found for criteria.");
+                                updateStatusMessage('没有找到符合条件的价格趋势和详细数据。', 'info');
+                                // If no data, hide all relevant charts/table
+                                priceLineChartContainer.style.display = 'none';
+                                auxiliaryChartsRow.style.display = 'none';
+                                priceTableContainer.style.display = 'none';
+                            }
+                        } catch (error) {
+                            console.error('[PRICES_NETWORK_ERROR] Failed to request detailed price data:', error);
+                            updateStatusMessage(`网络请求失败: ${error.message || error}`, 'danger');
+                            // Hide all relevant charts/table on network error
+                            priceLineChartContainer.style.display = 'none';
+                            auxiliaryChartsRow.style.display = 'none';
+                            priceTableContainer.style.display = 'none';
+                        }
+                    } else {
+                        // --- Initial or Invalid State ---
+                        console.log("[QUERY_FLOW] Neither Map nor Detailed View conditions met. Hiding all charts/table.");
+                        // All containers already hidden by initial reset.
+                        if (selectedVariety === '') {
+                            updateStatusMessage('请选择一种蔬菜种类进行查询。', 'info');
+                        } else if (selectedArea !== 'all' && selectedMarket === 'all') {
+                            updateStatusMessage('请选择一个具体的市场查看详细数据和图表。', 'info');
+                        } else {
+                            updateStatusMessage('请选择筛选条件以查看数据。', 'info');
+                        }
+                    }
+                } else if (currentActiveModule === 'marketReport') {
+                    // --- Market Report Module Query Logic ---
+                    console.log("[QUERY_FLOW] Entering Market Report Module Query.");
+                    updateStatusMessage(`正在为 "${selectedArea}" 区域的 "${selectedMarket}" 市场生成市场报表，日期范围: ${startDate} 至 ${endDate}...`, 'info'); // Removed variety from msg
+                    
+                    // Show market report content container
+                    marketReportContentDiv.style.display = 'grid';
+
+                    // Update report header
+                    reportMarketNameSpan.textContent = selectedMarket;
+                    reportYearSpan.textContent = marketReportYearSelect.value;
+                    summaryMarketNameSpan.textContent = selectedMarket;
+                    summaryYearSpan.textContent = marketReportYearSelect.value;
+
+                    // For Market Report, we need to fetch all relevant data for the year/quarter/month for the selected market and ALL varieties
+                    const queryParamsReport = new URLSearchParams({
+                        area: selectedArea,
+                        market: selectedMarket,
+                        startDate: startDate,
+                        endDate: endDate
+                    });
+                    // Crucially, DO NOT add variety to queryParamsReport here.
+                    // The backend should return all varieties for the market report.
+
+                    try {
+                        const responseReport = await fetch(`/api/prices?${queryParamsReport.toString()}`);
+                        const dataReport = await responseReport.json();
+                        console.log("[API_RESPONSE_REPORT]", dataReport);
+
+                        if (dataReport.error) {
+                            console.error("[REPORT_ERROR] Backend returned error:", dataReport.error);
+                            updateStatusMessage(`生成市场报表失败: ${dataReport.error}`, 'danger');
+                            marketReportContentDiv.style.display = 'none'; // Hide content on error
+                        } else if (dataReport.prices && dataReport.prices.length > 0) {
+                            console.log("[REPORT_SUCCESS] Successfully fetched data for market report.");
+                            // Process data for key indicators and charts, passing period info
+                            const processedData = processMarketReportData(
+                                dataReport.prices,
+                                currentSelectedYear,
+                                currentSelectedQuarter,
+                                currentSelectedMonth
+                            );
+                            updateMarketReportIndicators(processedData);
+                            renderMonthlyPriceTrendChart(processedData.monthlyAvgPrices, selectedMarket);
+                            renderAnnualAvgPriceRankingChart(processedData.varietyAnnualAvgPrices);
+                            renderPriceStabilityRankingChart(processedData.varietyPriceStability); // This is the market report version
+                            renderPriceIncreaseRankingChart(processedData.varietyAvgChanges); // Render new chart
+                            renderTop5PricePieChart(processedData.varietyAnnualAvgPrices); // Render new price pie chart
+                            renderTop5StabilityPieChart(processedData.varietyPriceStability); // NEW: Render new stability pie chart
+                            updateMarketReportSummary(processedData);
+
+                            updateStatusMessage('市场报表生成完成。', 'success');
+                        } else {
+                            console.warn("[NO_REPORT_DATA] No data found for market report criteria.");
+                            updateStatusMessage('没有找到符合条件的市场报表数据。', 'info');
+                            marketReportContentDiv.style.display = 'none'; // Hide content if no data
+                        }
+                    } catch (error) {
+                        console.error('[REPORT_NETWORK_ERROR] Failed to request market report data:', error);
+                        updateStatusMessage(`网络请求失败 (市场报表): ${error.message || error}`, 'danger');
+                        marketReportContentDiv.style.display = 'none'; // Hide content on network error
+                    }
+                } else if (currentActiveModule === 'pricePrediction') {
+                    // --- Price Prediction Module Query Logic ---
+                    console.log("[QUERY_FLOW] Entering Price Prediction Module Query.");
+                    updateStatusMessage(`正在为 "${selectedArea}" 区域的 "${selectedMarket}" 市场执行价格预测...`, 'info');
+                    
+                    // For now, just show the placeholder content. Actual prediction logic will be added later.
+                    document.getElementById('pricePredictionContent').style.display = 'grid'; 
+                    // You might want to update some placeholders here if they existed:
+                    // document.getElementById('predictionResult').textContent = '预测结果：等待进一步数据。';
+                    updateStatusMessage('价格预测模块已加载。请等待后续内容。', 'success');
+                }
+
+
+                queryBtn.disabled = false;
+                querySpinner.style.display = 'none';
+            }
+
+            // Helper function to calculate standard deviation
+            function calculateStandardDeviation(arr) {
+                // Filter out any non-numeric or NaN values before calculation
+                const numericArr = arr.filter(value => typeof value === 'number' && !isNaN(value));
+
+                // Standard deviation requires at least 2 data points.
+                // If less than 2, it's considered 0 or undefined for practical purposes.
+                if (numericArr.length < 2) {
+                    return 0; 
+                }
+
+                const mean = numericArr.reduce((acc, val) => acc + val, 0) / numericArr.length;
+                // Calculate variance, using (n-1) for sample standard deviation for unbiased estimate,
+                // but for population/descriptive stats, typically divide by n. Sticking to n.
+                const variance = numericArr.reduce((acc, val) => acc + Math.pow(val - mean, 2), 0) / numericArr.length;
+                return Math.sqrt(variance);
+            }
+
+            // Helper function to process data for Market Report
+            // Added selectedYear, selectedQuarter, selectedMonth parameters
+            function processMarketReportData(pricesData, selectedYear, selectedQuarter, selectedMonth) {
+                const result = {
+                    monthlyAvgPrices: {}, // { 'Variety': { 'YYYY-MM': avgPrice } }
+                    varietyAnnualAvgPrices: {}, // { 'Variety': annualAvgPrice }
+                    varietyPriceStability: {}, // { 'Variety': stdDev }
+                    varietyAvgChanges: {}, // { 'Variety': avgChange } // Price change based on first and last month
+                    overallAvgPrice: 0,
+                    overallStdDev: '0.00', // Default to string '0.00'
+                    overallAvgChange: 0,
+                    varietiesUp: new Set(),
+                    varietiesDown: new Set(),
+                    allPrices: [] // For overall std dev calculation
+                };
+
+                const pricesByVarietyAndMonth = {}; // { 'Variety': { 'YYYY-MM': [prices] } }
+                const changesByVariety = {}; // { 'Variety': [changes] } // Re-introducing this local variable
+                const pricesByVariety = {}; // { 'Variety': [prices] } // For variety-specific standard deviation
+
+                pricesData.forEach(item => {
+                    const price = parseFloat(item.price); // Parse price to ensure it's a number
+                    if (isNaN(price)) {
+                        console.warn(`[DATA_PROCESSING_WARN] Skipping invalid price for variety "${item.variety}" on ${item.time_price}: "${item.price}"`);
+                        return; // Skip this data point if price is not a valid number
+                    }
+
+                    const date = item.time_price.substring(0, 7); //YYYY-MM
+                    if (!pricesByVarietyAndMonth[item.variety]) {
+                        pricesByVarietyAndMonth[item.variety] = {};
+                        pricesByVariety[item.variety] = [];
+                        changesByVariety[item.variety] = []; // Initialize here
+                    }
+                    if (!pricesByVarietyAndMonth[item.variety][date]) {
+                        pricesByVarietyAndMonth[item.variety][date] = [];
+                    }
+                    
+                    pricesByVarietyAndMonth[item.variety][date].push(price);
+                    pricesByVariety[item.variety].push(price);
+                    result.allPrices.push(price);
+
+                    const change = parseFloat(item.change); // Parse change to ensure it's a number
+                    if (!isNaN(change)) {
+                        changesByVariety[item.variety].push(change);
+                    } else {
+                        console.warn(`[DATA_PROCESSING_WARN] Skipping invalid change for variety "${item.variety}" on ${item.time_price}: "${item.change}". Using 0 for calculation.`);
+                        changesByVariety[item.variety].push(0); // Use 0 for calculation if change is invalid
+                    }
+                });
+
+                // Calculate monthly average prices for each variety
+                for (const variety in pricesByVarietyAndMonth) {
+                    result.monthlyAvgPrices[variety] = {};
+                    for (const month in pricesByVarietyAndMonth[variety]) {
+                        const avg = pricesByVarietyAndMonth[variety][month].reduce((sum, p) => sum + p, 0) / pricesByVarietyAndMonth[variety][month].length;
+                        result.monthlyAvgPrices[variety][month] = parseFloat(avg.toFixed(2));
+                    }
+                }
+
+                // Determine the number of months in the selected period for calculation divisor
+                let numberOfMonthsInPeriod;
+                if (selectedMonth !== 'all') {
+                    numberOfMonthsInPeriod = 1;
+                } else if (selectedQuarter !== 'all') {
+                    numberOfMonthsInPeriod = 3;
+                } else { // Full year or 'all' selected
+                    numberOfMonthsInPeriod = 12; 
+                }
+                // Ensure the divisor is at least 1 to avoid division by zero
+                if (numberOfMonthsInPeriod === 0) numberOfMonthsInPeriod = 1;
+
+
+                // Calculate annual average price, stability, and period-based average change for each variety
+                let totalPeriodChangeSum = 0; // Sum of period changes across varieties
+                let varietyCountWithCalculableChanges = 0; // Varieties with enough data for period change
+
+                for (const variety in pricesByVariety) {
+                    const prices = pricesByVariety[variety];
+                    const avgPrice = prices.length > 0 ? prices.reduce((sum, p) => sum + p, 0) / prices.length : 0;
+                    result.varietyAnnualAvgPrices[variety] = parseFloat(avgPrice.toFixed(2));
+                    
+                    const stdDev = calculateStandardDeviation(prices);
+                    result.varietyPriceStability[variety] = parseFloat(stdDev.toFixed(2));
+
+                    const monthlyData = result.monthlyAvgPrices[variety];
+                    const sortedMonthsWithData = Object.keys(monthlyData).sort(); // Sort Drapeau-MM keys
+
+                    // Calculate price change based on first and last month of data in the period
+                    if (sortedMonthsWithData.length >= 1) { // Need at least one month of data
+                        const firstMonthAvgPrice = monthlyData[sortedMonthsWithData[0]]; // Price for the earliest month with data
+                        const lastMonthAvgPrice = monthlyData[sortedMonthsWithData[sortedMonthsWithData.length - 1]]; // Price for the latest month with data
+                        
+                        // The "change" is the difference between last and first month's average price
+                        const periodPriceDifference = (lastMonthAvgPrice - firstMonthAvgPrice);
+                        // Divide by the number of months in the selected period, not necessarily number of data points
+                        const avgMonthlyChangeForPeriod = numberOfMonthsInPeriod > 0 ? (periodPriceDifference / numberOfMonthsInPeriod) : 0;
+
+                        result.varietyAvgChanges[variety] = parseFloat(avgMonthlyChangeForPeriod.toFixed(2));
+                        
+                        // Accumulate for overall average change calculation
+                        totalPeriodChangeSum += avgMonthlyChangeForPeriod;
+                        varietyCountWithCalculableChanges++;
+
+                        if (avgMonthlyChangeForPeriod > 0) {
+                            result.varietiesUp.add(variety);
+                        } else if (avgMonthlyChangeForPeriod < 0) {
+                            result.varietiesDown.add(variety);
+                        }
+                    } else {
+                        result.varietyAvgChanges[variety] = 0; // No data for change calculation
+                    }
+                }
+
+                // Calculate overall average price and overall standard deviation
+                result.overallAvgPrice = result.allPrices.length > 0 ? (result.allPrices.reduce((sum, p) => sum + p, 0) / result.allPrices.length).toFixed(2) : '0.00';
+                
+                const calculatedOverallStdDev = calculateStandardDeviation(result.allPrices);
+                result.overallStdDev = !isNaN(calculatedOverallStdDev) ? calculatedOverallStdDev.toFixed(2) : '0.00'; // Ensure it's a formatted number string
+
+                // Calculate overall average change based on the newly defined period changes
+                result.overallAvgChange = varietyCountWithCalculableChanges > 0 ? (totalPeriodChangeSum / varietyCountWithCalculableChanges).toFixed(2) : '0.00';
+                result.varietyUpCount = result.varietiesUp.size;
+
+                return result;
+            }
+
+            // Function to update key indicators
+            function updateMarketReportIndicators(data) {
+                avgOverallPriceSpan.textContent = `${data.overallAvgPrice} 元/公斤`;
+                overallStdDevSpan.textContent = data.overallStdDev; // This now comes formatted as '0.00' or 'X.YY'
+                avgChangeOverallSpan.textContent = `${data.overallAvgChange} %`;
+                varietyUpCountSpan.textContent = `${data.varietyUpCount} 种`; // Added '种' for clarity
+            }
+
+            // Function to render Monthly Price Trend Chart
+            // This variable now controls the *explicitly clicked* series that should remain highlighted
+            let currentClickedSeriesName = null; 
+
+            function renderMonthlyPriceTrendChart(monthlyAvgPrices, marketName) {
+                if (!monthlyPriceTrendChart) {
+                    monthlyPriceTrendChart = echarts.init(monthlyPriceTrendChartContainer);
+                }
+                monthlyPriceTrendChart.clear(); // Clear chart before setting new options
+
+                const allVarietiesInReportData = Object.keys(monthlyAvgPrices).sort();
+                const allMonths = Array.from(new Set(Object.values(monthlyAvgPrices).flatMap(Object.keys))).sort();
+
+                let series = allVarietiesInReportData.map(variety => {
+                    const isCurrentHighlighted = (currentClickedSeriesName === variety);
+                    const isAnySeriesHighlighted = (currentClickedSeriesName !== null);
+                    
+                    let lineOpacity = 1;
+                    let symbolOpacity = 1;
+                    let symbolShow = 'circle';
+
+                    if (isAnySeriesHighlighted && !isCurrentHighlighted) {
+                        // If some series is clicked, and THIS series is NOT the clicked one, make it invisible
+                        lineOpacity = 0; // Fully hide non-selected lines
+                        symbolOpacity = 0; // Hide symbols as well
+                        symbolShow = 'none'; // Ensure no symbols are drawn
+                    }
+
+                    return {
+                        name: variety,
+                        type: 'line',
+                        smooth: true,
+                        data: allMonths.map(month => monthlyAvgPrices[variety][month] || null),
+                        // Manually control opacity and symbol visibility
+                        lineStyle: { 
+                            width: 2,
+                            opacity: lineOpacity,
+                            shadowColor: 'rgba(0,0,0,0.1)',
+                            shadowBlur: 10
+                        },
+                        itemStyle: { // For symbols
+                            opacity: symbolOpacity
+                        },
+                        symbol: symbolShow,
+                        symbolSize: 6,
+                        connectNulls: true,
+                        // Remove emphasis and blur properties as we are managing visibility manually
+                        // emphasis: { focus: 'series', lineStyle: { width: 4 } }, // Make hovered line thicker
+                        // blur: { lineStyle: { opacity: 0 }, itemStyle: { opacity: 0 } } // Change opacity to 0 to hide
+                    };
+                });
+                let legendData = allVarietiesInReportData;
+
+                const option = {
+                    title: {
+                        text: `${marketName} 各蔬菜品种月度平均价格趋势`,
+                        subtext: `年份: ${marketReportYearSelect.value}`,
+                        left: 'center',
+                        textStyle: { color: '#1f2937', fontWeight: 'bold', fontSize: 20 }
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: { type: 'cross', label: { backgroundColor: '#6a7985' } },
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        borderColor: '#d1d5db',
+                        borderWidth: 1,
+                        textStyle: { color: '#374151' },
+                        extraCssText: 'box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);',
+                        formatter: function (params) {
+                            let tooltipContent = `日期: ${params[0].name}<br/>`;
+                            // Only show tooltip for the highlighted series if one is selected, otherwise show all
+                            if (currentClickedSeriesName !== null) {
+                                const item = params.find(p => p.seriesName === currentClickedSeriesName);
+                                if (item) {
+                                    if (item.value !== null && typeof item.value !== 'undefined') {
+                                        tooltipContent += `${item.marker} ${item.seriesName}: ${item.value.toFixed(2)} 元/公斤<br/>`;
+                                    } else {
+                                        tooltipContent += `${item.marker} ${item.seriesName}: 暂无数据<br/>`;
+                                    }
+                                }
+                            } else {
+                                params.forEach(function (item) {
+                                    if (item.componentType === 'series' && item.seriesType === 'line') {
+                                        if (item.value !== null && typeof item.value !== 'undefined') {
+                                            tooltipContent += `${item.marker} ${item.seriesName}: ${item.value.toFixed(2)} 元/公斤<br/>`;
+                                        } else {
+                                            tooltipContent += `${item.marker} ${item.seriesName}: 暂无数据<br/>`;
+                                        }
+                                    }
+                                });
+                            }
+                            return tooltipContent;
+                        }
+                    },
+                    legend: {
+                        data: legendData,
+                        type: 'scroll',
+                        top: 'bottom',
+                        padding: [15, 0, 0, 0],
+                        textStyle: { color: '#374151' }
+                    },
+                    grid: { left: '3%', right: '4%', bottom: '15%', containLabel: true },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: allMonths,
+                        axisLabel: { color: '#6b7280', rotate: 45, align: 'right' },
+                        axisLine: { lineStyle: { color: '#d1d5db' } }
+                    },
+                    yAxis: {
+                        type: 'value',
+                        name: '价格 (元/公斤)',
+                        nameTextStyle: { color: '#374151', fontWeight: 'bold' },
+                        axisLabel: { color: '#6b7280' },
+                        axisLine: { show: false },
+                        splitLine: { lineStyle: { color: '#e5e7eb', type: 'solid' } }
+                    },
+                    series: series,
+                    color: ECHARTS_COLOR_PALETTE
+                };
+                monthlyPriceTrendChart.setOption(option);
+                monthlyPriceTrendChart.resize();
+
+                // Add click event listener for the chart
+                monthlyPriceTrendChart.off('click'); // Remove previous listeners to prevent duplicates
+                monthlyPriceTrendChart.on('click', function (params) {
+                    if (params.componentType === 'series' && params.seriesType === 'line') {
+                        const clickedVegetable = params.seriesName;
+                        console.log(`[CHART_CLICK] Clicked line for vegetable: ${clickedVegetable}`);
+
+                        if (currentClickedSeriesName === clickedVegetable) {
+                            // If same series clicked, unhighlight all
+                            currentClickedSeriesName = null;
+                            updateStatusMessage(`已取消聚焦，显示所有蔬菜趋势。`, 'info');
+                        } else {
+                            // Highlight the clicked series
+                            currentClickedSeriesName = clickedVegetable;
+                            updateStatusMessage(`已聚焦至: ${clickedVegetable}。`, 'success');
+                        }
+                        // Re-render chart to apply new visibility state
+                        renderMonthlyPriceTrendChart(monthlyAvgPrices, marketName); 
+                    } else if (params.componentType === 'grid' || params.componentType === 'series' && params.seriesType !== 'line') {
+                        // Clicked on empty space (grid) or other series types (e.g. if we had other types)
+                        // If a series was highlighted, unhighlight it
+                        if (currentClickedSeriesName !== null) {
+                            currentClickedSeriesName = null;
+                            updateStatusMessage(`已取消聚焦，显示所有蔬菜趋势。`, 'info');
+                            renderMonthlyPriceTrendChart(monthlyAvgPrices, marketName);
+                        }
+                    }
+                });
+            }
+
+            // Function to render Annual Average Price Ranking Chart (in Market Report Module)
+            function renderAnnualAvgPriceRankingChart(varietyAnnualAvgPrices) {
+                if (!annualAvgPriceRankingChart) {
+                    annualAvgPriceRankingChart = echarts.init(annualAvgPriceRankingChartContainer);
+                }
+                annualAvgPriceRankingChart.clear();
+
+                const sortedVarieties = Object.keys(varietyAnnualAvgPrices).sort((a, b) => varietyAnnualAvgPrices[b] - varietyAnnualAvgPrices[a]);
+                const data = sortedVarieties.map(variety => varietyAnnualAvgPrices[variety]);
+
+                const option = {
+                    title: {
+                        text: `各蔬菜品种年度平均价格排名 (${marketReportYearSelect.value}年)`,
+                        left: 'left',
+                        textStyle: { color: '#1f2937', fontSize: 16 }
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: { type: 'shadow' },
+                        formatter: '{b}: {c} 元/公斤',
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        borderColor: '#d1d5db',
+                        textStyle: { color: '#374151' }
+                    },
+                    grid: { left: '3%', right: '8%', top: '15%', bottom: '3%', containLabel: true },
+                    xAxis: {
+                        type: 'value',
+                        name: '年度平均价格 (元/公斤)',
+                        nameTextStyle: { color: '#374151' },
+                        axisLabel: { color: '#6b7280' },
+                        splitLine: { lineStyle: { color: '#e5e7eb' } }
+                    },
+                    yAxis: {
+                        type: 'category',
+                        data: sortedVarieties,
+                        inverse: true, // Display highest value at top
+                        axisLabel: { color: '#6b7280' },
+                        axisLine: { lineStyle: { color: '#d1d5db' } },
+                        axisTick: { show: false }
+                    },
+                    series: [{
+                        name: '年度平均价格',
+                        type: 'bar',
+                        data: data,
+                        itemStyle: {
+                            color: function(params) {
+                                const varietyName = params.name;
+                                const colorIndex = sortedVarieties.indexOf(varietyName);
+                                const baseColor = ECHARTS_COLOR_PALETTE[colorIndex % ECHARTS_COLOR_PALETTE.length];
+                                return new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: baseColor + '40' }, { offset: 1, color: baseColor }]);
+                            },
+                            borderRadius: [0, 5, 5, 0]
+                        },
+                        emphasis: {
+                            itemStyle: {
+                                color: function(params) {
+                                    const varietyName = params.name;
+                                    const colorIndex = sortedVarieties.indexOf(varietyName);
+                                    const baseColor = ECHARTS_COLOR_PALETTE[colorIndex % ECHARTS_COLOR_PALETTE.length];
+                                    return new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: baseColor }, { offset: 1, color: baseColor + 'E0' }]);
+                                }
+                            }
+                        }
+                    }]
+                };
+                annualAvgPriceRankingChart.setOption(option);
+                annualAvgPriceRankingChart.resize();
+            }
+
+            // Function to render Top 5 Price Pie Chart (in Market Report Module)
+            function renderTop5PricePieChart(varietyAnnualAvgPrices) {
+                if (!top5PricePieChart) {
+                    top5PricePieChart = echarts.init(top5PricePieChartContainer);
+                }
+                top5PricePieChart.clear();
+
+                // Convert to array of objects, sort by price descending, and take top 5
+                const sortedVarieties = Object.keys(varietyAnnualAvgPrices)
+                    .map(variety => ({ name: variety, value: varietyAnnualAvgPrices[variety] }))
+                    .sort((a, b) => b.value - a.value); // Sort descending by value
+
+                const top5Data = sortedVarieties.slice(0, 5);
+
+                const pieSeriesData = top5Data.map(item => ({
+                    name: item.name,
+                    value: item.value
+                }));
+
+                const option = {
+                    title: {
+                        text: `年度价格前五蔬菜 (${marketReportYearSelect.value}年)`,
+                        left: 'center',
+                        textStyle: { color: '#1f2937', fontSize: 16 }
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: '{b}: {c} 元/公斤 ({d}%)',
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        borderColor: '#d1d5db',
+                        textStyle: { color: '#374151' }
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        left: 'left',
+                        data: top5Data.map(item => item.name),
+                        textStyle: { color: '#374151' }
+                    },
+                    series: [
+                        {
+                            name: '年度平均价格',
+                            type: 'pie',
+                            radius: ['40%', '70%'], // Donut chart
+                            avoidLabelOverlap: false,
+                            itemStyle: {
+                                borderRadius: 10,
+                                borderColor: '#fff',
+                                borderWidth: 2
+                            },
+                            label: {
+                                show: true,
+                                position: 'outer',
+                                formatter: '{b}\n{d}%', // Show name and percentage
+                                color: '#374151',
+                                fontSize: 12
+                            },
+                            emphasis: {
+                                label: {
+                                    show: true,
+                                    fontSize: 16,
+                                    fontWeight: 'bold'
+                                }
+                            },
+                            labelLine: {
+                                show: true
+                            },
+                            data: pieSeriesData,
+                            color: ECHARTS_COLOR_PALETTE
+                        }
+                    ]
+                };
+                top5PricePieChart.setOption(option);
+                top5PricePieChart.resize();
+            }
+
+            // NEW: Function to render Top 5 Price Stability Pie Chart (in Market Report Module)
+            function renderTop5StabilityPieChart(varietyPriceStability) {
+                if (!top5StabilityPieChart) {
+                    top5StabilityPieChart = echarts.init(top5StabilityPieChartContainer);
+                }
+                top5StabilityPieChart.clear();
+
+                // Convert to array of objects, sort by stability (ascending std dev, so most stable comes first)
+                // Then take the top 5 (most stable)
+                const sortedVarieties = Object.keys(varietyPriceStability)
+                    .map(variety => ({ name: variety, value: varietyPriceStability[variety] }))
+                    .sort((a, b) => a.value - b.value); // Sort ascending by value (lower std dev = more stable)
+
+                const top5Data = sortedVarieties.slice(0, 5); // Take the top 5 most stable
+
+                const pieSeriesData = top5Data.map(item => ({
+                    name: item.name,
+                    value: item.value
+                }));
+
+                const option = {
+                    title: {
+                        text: `价格波动性前五蔬菜 (${marketReportYearSelect.value}年)`,
+                        left: 'center',
+                        textStyle: { color: '#1f2937', fontSize: 16 }
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: '{b}: {c} ({d}%)', // Show value and percentage
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        borderColor: '#d1d5db',
+                        textStyle: { color: '#374151' }
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        left: 'left',
+                        data: top5Data.map(item => item.name),
+                        textStyle: { color: '#374151' }
+                    },
+                    series: [
+                        {
+                            name: '价格标准差',
+                            type: 'pie',
+                            radius: ['40%', '70%'], // Donut chart
+                            avoidLabelOverlap: false,
+                            itemStyle: {
+                                borderRadius: 10,
+                                borderColor: '#fff',
+                                borderWidth: 2
+                            },
+                            label: {
+                                show: true,
+                                position: 'outer',
+                                formatter: '{b}\n{d}%', // Show name and percentage
+                                color: '#374151',
+                                fontSize: 12
+                            },
+                            emphasis: {
+                                label: {
+                                    show: true,
+                                    fontSize: 16,
+                                    fontWeight: 'bold'
+                                }
+                            },
+                            labelLine: {
+                                show: true
+                            },
+                            data: pieSeriesData,
+                            color: ECHARTS_COLOR_PALETTE
+                        }
+                    ]
+                };
+                top5StabilityPieChart.setOption(option);
+                top5StabilityPieChart.resize();
+            }
+
+
+            // Function to render Price Stability Ranking Chart (in Market Report Module)
+            function renderPriceStabilityRankingChart(varietyPriceStability) {
+                if (!priceStabilityRankingChart) {
+                    priceStabilityRankingChart = echarts.init(priceStabilityRankingChartContainer); // Use the correct container
+                }
+                priceStabilityRankingChart.clear();
+
+                // Sort by standard deviation (ascending for stability - lower std dev is more stable)
+                const sortedVarieties = Object.keys(varietyPriceStability).sort((a, b) => varietyPriceStability[a] - varietyPriceStability[b]);
+                const data = sortedVarieties.map(variety => varietyPriceStability[variety]);
+
+                const option = {
+                    title: {
+                        text: `各蔬菜品种价格波动性 (标准差) 排名 (${marketReportYearSelect.value}年)`,
+                        subtext: '标准差越小，价格越稳定',
+                        left: 'left',
+                        textStyle: { color: '#1f2937', fontSize: 16 }
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: { type: 'shadow' },
+                        formatter: '{b}: {c}',
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        borderColor: '#d1d5db',
+                        textStyle: { color: '#374151' }
+                    },
+                    grid: { left: '3%', right: '8%', top: '15%', bottom: '3%', containLabel: true },
+                    xAxis: { // Changed to value for horizontal bar chart
+                        type: 'value',
+                        name: '价格标准差',
+                        nameTextStyle: { color: '#1f2937' },
+                        axisLabel: { color: '#6b7280' },
+                        splitLine: { lineStyle: { color: '#e5e7eb' } }
+                    },
+                    yAxis: { // Changed to category for horizontal bar chart
+                        type: 'category',
+                        data: sortedVarieties,
+                        inverse: true, // Display lowest std dev (most stable) at top
+                        axisLabel: { color: '#6b7280' },
+                        axisLine: { lineStyle: { color: '#d1d5db' } },
+                        axisTick: { show: false }
+                    },
+                    series: [{
+                        name: '价格标准差',
+                        type: 'bar',
+                        data: data,
+                        itemStyle: {
+                            // Changed gradient direction for horizontal bars
+                            color: function(params) {
+                                const varietyName = params.name;
+                                const colorIndex = sortedVarieties.indexOf(varietyName);
+                                const baseColor = ECHARTS_COLOR_PALETTE[colorIndex % ECHARTS_COLOR_PALETTE.length];
+                                return new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: baseColor + '40' }, { offset: 1, color: baseColor }]);
+                            },
+                            borderRadius: [0, 5, 5, 0] // Adjusted border radius for horizontal bars
+                        },
+                        emphasis: {
+                            itemStyle: {
+                                color: function(params) {
+                                    const varietyName = params.name;
+                                    const colorIndex = sortedVarieties.indexOf(varietyName);
+                                    const baseColor = ECHARTS_COLOR_PALETTE[colorIndex % ECHARTS_COLOR_PALETTE.length];
+                                    return new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ offset: 0, color: baseColor }, { offset: 1, color: baseColor + 'E0' }]);
+                                }
+                            }
+                        }
+                    }]
+                };
+                priceStabilityRankingChart.setOption(option);
+                priceStabilityRankingChart.resize();
+            }
+
+            // New: Function to render Price Increase Ranking Chart (in Market Report Module)
+            function renderPriceIncreaseRankingChart(varietyAvgChanges) {
+                if (!priceIncreaseRankingChart) {
+                    priceIncreaseRankingChart = echarts.init(document.getElementById('priceIncreaseRankingChartContainer'));
+                }
+                priceIncreaseRankingChart.clear();
+
+                // Filter for varieties with positive average change and sort by change (descending)
+                const increasingVarieties = Object.keys(varietyAvgChanges).filter(v => varietyAvgChanges[v] > 0);
+                const sortedIncreasingVarieties = increasingVarieties.sort((a, b) => varietyAvgChanges[b] - varietyAvgChanges[a]);
+
+                const data = sortedIncreasingVarieties.map(variety => varietyAvgChanges[variety]);
+
+                const option = {
+                    title: {
+                        text: `价格上涨蔬菜种类排名 (${marketReportYearSelect.value}年)`,
+                        subtext: '上涨幅度越大排名越靠前',
+                        left: 'left',
+                        textStyle: { color: '#1f2937', fontWeight: 'bold', fontSize: 16 }
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: { type: 'shadow' },
+                        formatter: '{b}: {c}%',
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        borderColor: '#d1d5db',
+                        borderWidth: 1,
+                        textStyle: { color: '#374151' },
+                        extraCssText: 'box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);'
+                    },
+                    grid: { left: '3%', right: '8%', top: '15%', bottom: '3%', containLabel: true },
+                    xAxis: {
+                        type: 'value',
+                        name: '平均涨跌幅 (%)',
+                        nameTextStyle: { color: '#1f2937', fontWeight: 'bold' },
+                        axisLabel: { color: '#6b7280' },
+                        axisLine: { lineStyle: { color: '#d1d5db' } },
+                        splitLine: { lineStyle: { color: '#e5e7eb', type: 'solid' } }
+                    },
+                    yAxis: {
+                        type: 'category',
+                        data: sortedIncreasingVarieties,
+                        inverse: true, // Display highest increase at top
+                        axisLabel: { color: '#6b7280' },
+                        axisLine: { lineStyle: { color: '#d1d5db' } },
+                        axisTick: { show: false }
+                    },
+                    series: [{
+                        name: '平均涨跌幅',
+                        type: 'bar',
+                        data: data,
+                        itemStyle: {
+                            color: function(params) {
+                                // Use a strong red/orange gradient for positive changes
+                                return new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                                    { offset: 0, color: '#fee2e2' }, // Light Red
+                                    { offset: 1, color: '#ef4444' }  // Strong Red
+                                ]);
+                            },
+                            borderRadius: [0, 8, 8, 0] // More rounded corners
+                        },
+                        emphasis: {
+                            itemStyle: {
+                                color: function(params) {
+                                    return new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+                                        { offset: 0, color: '#fca5a5' }, // Lighter red on hover
+                                        { offset: 1, color: '#dc2626' } // Darker red on hover
+                                    ]);
+                                }
+                            }
+                        },
+                        barWidth: '60%' // Make bars a bit thicker
+                    }]
+                };
+                priceIncreaseRankingChart.setOption(option);
+                priceIncreaseRankingChart.resize();
+            }
+
+
+            // Function to update the textual summary
+            function updateMarketReportSummary(data) {
+                summaryAvgOverallPriceSpan.textContent = data.overallAvgPrice;
+                summaryOverallStdDevSpan.textContent = data.overallStdDev; // This will now always be a formatted number string
+                summaryVarietyUpCountSpan.textContent = data.varietyUpCount; // Update new span
+
+                // Generate dynamic text for variety price trends and stability
+                let trendAnalysis = '';
+                let stabilityAnalysis = '';
+                //let increaseAnalysis = ''; // Not used directly here, handled by spans
+
+                const varieties = Object.keys(data.monthlyAvgPrices);
+                if (varieties.length > 0) {
+                    // Example: Pick the first few varieties for trend analysis
+                    const topVarieties = varieties.slice(0, Math.min(varieties.length, 3));
+                    topVarieties.forEach(variety => {
+                        const monthsWithData = Object.keys(data.monthlyAvgPrices[variety]).length;
+                        if (monthsWithData > 0) {
+                            const minMonth = Object.keys(data.monthlyAvgPrices[variety]).reduce((a, b) => a < b ? a : b);
+                            const maxMonth = Object.keys(data.monthlyAvgPrices[variety]).reduce((a, b) => a > b ? a : b);
+                            const firstPrice = data.monthlyAvgPrices[variety][minMonth];
+                            const lastPrice = data.monthlyAvgPrices[variety][maxMonth];
+                            
+                            // Use the average monthly change for the period for textual trend analysis
+                            const avgMonthlyChange = data.varietyAvgChanges[variety]; // This is already calculated in processMarketReportData
+                            const trend = avgMonthlyChange >= 0 ? '上涨' : '下跌';
+                            trendAnalysis += `在${marketReportYearSelect.value}年，<span class="font-bold">${variety}</span> 的价格呈现${trend}趋势，从${minMonth}的${firstPrice}元/公斤变化到${maxMonth}的${lastPrice}元/公斤。`;
+                        }
+                    });
+
+                    // Get most stable and least stable varieties
+                    const sortedByStability = Object.keys(data.varietyPriceStability).sort((a, b) => data.varietyPriceStability[a] - data.varietyPriceStability[b]);
+                    if (sortedByStability.length > 0) {
+                        const mostStable = sortedByStability[0];
+                        const leastStable = sortedByStability[sortedByStability.length - 1];
+                        stabilityAnalysis = `其中，<span class="font-bold text-green-600">${mostStable}</span> 的价格波动性最小 (标准差: ${data.varietyPriceStability[mostStable]})，表现最为稳定；而 <span class="font-bold text-red-600">${leastStable}</span> 的价格波动性较大 (标准差: ${data.varietyPriceStability[leastStable]})。`;
+                    }
+
+                    // For price increase analysis
+                    const increasingVarietiesData = Object.keys(data.varietyAvgChanges)
+                                                    .filter(v => data.varietyAvgChanges[v] > 0)
+                                                    .sort((a, b) => data.varietyAvgChanges[b] - data.varietyAvgChanges[a]);
+                    if (increasingVarietiesData.length > 0) {
+                        const topIncreasingVariety = increasingVarietiesData[0];
+                        const topIncreasePercentage = data.varietyAvgChanges[topIncreasingVariety];
+                        summaryTopIncreasingVarietySpan.textContent = topIncreasingVariety;
+                        summaryTopIncreasePercentageSpan.textContent = topIncreasePercentage;
+                    } else {
+                        summaryTopIncreasingVarietySpan.textContent = '暂无';
+                        summaryTopIncreasePercentageSpan.textContent = '0.00'; // Ensure it's a number string
+                    }
+
+                } else {
+                    trendAnalysis = '没有足够的月度价格数据来分析各品种趋势。';
+                    stabilityAnalysis = '没有足够的品种数据来分析价格稳定性。';
+                    summaryTopIncreasingVarietySpan.textContent = '暂无';
+                    summaryTopIncreasePercentageSpan.textContent = '0.00';
+                }
+
+                document.getElementById('marketReportSummary').querySelector('h4:nth-of-type(2) + p').innerHTML = `
+                    在过去的一年里，该市场内主要蔬菜品种的价格表现多样。${trendAnalysis}<br/><br/>
+                `;
+                document.getElementById('marketReportSummary').querySelector('h4:nth-of-type(3) + p').innerHTML = `
+                    通过价格波动性分析，我们可以更好地理解市场风险。${stabilityAnalysis}
+                `;
+            }
+
+            // Helper function to get the number of months based on current quarter/month selection
+            function getNumberOfMonthsForCurrentPeriod() {
+                const selectedQuarter = marketReportQuarterSelect.value;
+                const selectedMonth = marketReportMonthSelect.value;
+
+                if (selectedMonth !== 'all') {
+                    return 1;
+                } else if (selectedQuarter !== 'all') {
+                    return 3;
+                } else { // Full year or 'all' selected
+                    return 12; 
+                }
+            }
+
+
+            // Define custom color palettes for different vegetables (Natural/Topographic Theme)
+            const VEGETABLE_MAP_COLOR_PALETTES = {
+                '默认': [
+                    '#e0f2f7', '#b2e1ed', '#84d0e3', '#56bfd9', '#28aed0', '#1f8da3', '#166c7a', '#0d4b52'
+                ],
+                '番茄': [
+                    '#ffebee', '#ffcdd2', '#ef9a9a', '#e57373', '#ef5350', '#f44336', '#e53935', '#d32f2f', '#c62828', '#b71c1c'
+                ],
+                '土豆': [
+                    '#fffde7', '#fff9c4', '#fff59d', '#fff176', '#ffee58', '#ffeb3b', '#fdd835', '#fbc02d', '#f9a825', '#f57f17'
+                ],
+                '白菜': [
+                    '#e8f5e9', '#c8e6c9', '#a5d6a7', '#81c784', '#66bb6a', '#4caf50', '#43a047', '#388e3c', '#2e7d32', '#1b5e20'
+                ],
+                '辣椒': [
+                    '#ffebee', '#ffcdd2', '#ef9a9a', '#e57373', '#ef5350', '#f44336', '#e53935', '#d32f2f', '#c62828', '#b71c1c' // Same as tomato for now, or can be unique
+                ],
+                '黄瓜': [
+                    '#e8f5e9', '#c8e6c9', '#a5d6a7', '#81c784', '#66bb6a', '#4caf50', '#43a047', '#388e3c', '#2e7d32', '#1b5e20' // Same as cabbage for now, or can be unique
+                ]
+            };
+
+
+            // --- Render China Map (ECharts) ---
+            async function renderChinaMap(averagePricesData) {
+                if (!myChart) {
+                    myChart = echarts.init(chinaMapContainer);
+                } else {
+                    myChart.clear(); // Clear before re-rendering to fix highlight issues
+                }
+
+                // Using local GeoJSON file for China map
+                const chinaGeoJsonUrl = '/static/geojson/China.json';
+
+                try {
+                    const response = await fetch(chinaGeoJsonUrl);
+                    const chinaJson = await response.json();
+
+                    echarts.registerMap('china', chinaJson);
+
+                    const seriesData = averagePricesData.map(item => {
+                        return {
+                            name: item.area,
+                            value: parseFloat(item.average_price) // Ensure it's parsed here
+                        };
+                    }).filter(item => !isNaN(item.value)); // Filter out invalid average prices
+
+                    const prices = seriesData.map(item => item.value);
+                    // Ensure minPrice and maxPrice are valid, avoid Math.min/max errors with empty arrays
+                    const minPrice = prices.length > 0 ? Math.min(...prices) : 0;
+                    const maxPrice = prices.length > 0 ? Math.max(...prices) : 10;
+
+                    // Get the color palette for the currently selected vegetable
+                    const selectedVegetable = vegetableSelect.value;
+                    const currentMapPalette = VEGETABLE_MAP_COLOR_PALETTES[selectedVegetable] || VEGETABLE_MAP_COLOR_PALETTES['默认'];
+
+                    const option = {
+                        title: {
+                            text: `${selectedVegetable} 各区域平均价格`,
+                            subtext: `日期范围: ${startDateInput.value} - ${endDateInput.value}`,
+                            left: 'center',
+                            textStyle: {
+                                color: '#1f2937', /* Dark text color for light theme */
+                                fontWeight: 'bold',
+                                fontSize: 20
+                            }
+                        },
+                        tooltip: {
+                            trigger: 'item',
+                            formatter: function (params) {
+                                if (params.value !== null && typeof params.value !== 'undefined') {
+                                    // 更具商业感的提示：强调区域名称和价格
+                                    return `<strong>${params.name}</strong><br/>平均价格: ${params.value.toFixed(2)} 元/公斤`;
+                                } else {
+                                    return `<strong>${params.name}</strong><br/>暂无数据`;
+                                }
+                            },
+                            backgroundColor: 'rgba(255, 255, 255, 0.9)', /* Light semi-transparent background */
+                            borderColor: '#d1d5db', /* Light border */
+                            borderWidth: 1,
+                            textStyle: {
+                                color: '#374151' /* Dark text */
+                            },
+                            extraCssText: 'box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); border-radius: 4px;' /* 柔和阴影，圆角 */
+                        },
+                        visualMap: {
+                            min: minPrice,
+                            max: maxPrice,
+                            left: '20px',
+                            bottom: '20px',
+                            text: ['高', '低'],
+                            calculable: true,
+                            inRange: {
+                                color: currentMapPalette // Use vegetable-specific palette
+                            },
+                            textStyle: {
+                                color: '#374151' /* Dark text */
+                            },
+                            orient: 'horizontal',
+                            itemWidth: 10,
+                            itemHeight: 80,
+                            formatter: function (value) {
+                                return value.toFixed(1); // Format legend values
+                            },
+                            controller: { 
+                                inRange: {
+                                    color: currentMapPalette[currentMapPalette.length - 1] || '#4f46e5' // Use a dominant color from the palette
+                                },
+                                outOfRange: {
+                                    color: '#e5e7eb' // Not selected color
+                                }
+                            }
+                        },
+                        series: [
+                            {
+                                name: '平均价格',
+                                type: 'map',
+                                map: 'china',
+                                roam: true, /* Enable zoom/pan on map for better exploration */
+                                center: [104.0, 35.0],
+                                zoom: 1.2,
+                                label: {
+                                    show: true,
+                                    color: '#374151', /* Dark province labels */
+                                    fontSize: 10,
+                                    fontWeight: 'bold',
+                                    textShadowColor: 'rgba(255, 255, 255, 0.5)', /* 标签柔和阴影 */
+                                    textShadowBlur: 3
+                                },
+                                itemStyle: {
+                                    borderColor: '#9ca3af', /* Medium gray border */
+                                    borderWidth: 0.8, /* 稍微细一点的边框 */
+                                    areaColor: '#f3f4f6', // A subtle base light gray for areas when not visualized by value
+                                    shadowColor: 'rgba(0, 0, 0, 0.1)', /* 柔和阴影 */
+                                    shadowBlur: 5,
+                                    shadowOffsetX: 0,
+                                    shadowOffsetY: 0
+                                },
+                                emphasis: {
+                                    label: {
+                                        show: true,
+                                        color: '#1f2937',
+                                        fontSize: 12,
+                                        textShadowColor: 'rgba(255, 255, 255, 0.8)', 
+                                        textShadowBlur: 5
+                                    },
+                                    itemStyle: {
+                                        areaColor: '#6366f1', /* Indigo highlight */
+                                        borderColor: '#4f46e5', /* Darker indigo highlight border */
+                                        borderWidth: 1.5,
+                                        shadowColor: 'rgba(79, 70, 229, 0.5)', /* Soft glow effect */
+                                        shadowBlur: 10,
+                                        shadowOffsetX: 0,
+                                        shadowOffsetY: 0,
+                                        opacity: 0.9 /* Slightly lower opacity on emphasis */
+                                    }
+                                },
+                                data: seriesData
+                            }
+                        ]
+                    };
+
+                    myChart.setOption(option);
+                    myChart.resize();
+
+                    // --- Add map click event listener ---
+                    myChart.off('click');
+                    myChart.on('click', function (params) {
+                        if (params.componentType === 'series' && params.seriesType === 'map') {
+                            const clickedAreaName = params.name;
+                            console.log(`[MAP_CLICK] Clicked Area: ${clickedAreaName}`);
+                            regionSelect.value = clickedAreaName;
+                            // Trigger change event to load markets for the clicked area
+                            regionSelect.dispatchEvent(new Event('change')); 
+                            marketSelect.value = 'all'; // Reset market to 'all' for the newly selected region
+                            queryPrices(); // Re-query with the new region and 'all' markets
+                        }
+                    });
+
+                } catch (error) {
+                    console.error('Failed to load or render China map data:', error);
+                    updateStatusMessage('无法加载或渲染中国地图，请检查本地GeoJSON文件和后端服务。', 'danger');
+                }
+            }
+
+            // --- Render Line Chart (ECharts) ---
+            function renderLineChart(pricesData, selectedMarketFilter) {
+                if (!lineChart) {
+                    lineChart = echarts.init(priceLineChartContainer);
+                } else {
+                    lineChart.clear();
+                }
+
+                // Filter data for the specific selected market, or use all if "all" markets selected within a region
+                let filteredPricesData = pricesData;
+                let chartTitleMarketPart = "";
+                if (selectedMarketFilter && selectedMarketFilter !== 'all') {
+                    filteredPricesData = pricesData.filter(item => item.market === selectedMarketFilter);
+                    chartTitleMarketPart = `在 ${selectedMarketFilter}`;
+                }
+
+                const dates = Array.from(new Set(filteredPricesData.map(item => item.time_price))).sort();
+                const markets = Array.from(new Set(filteredPricesData.map(item => item.market))).sort(); // Ensure consistent sorting for color mapping
+
+                const series = [];
+                markets.forEach(market => {
+                    const marketData = dates.map(date => {
+                        const priceEntry = filteredPricesData.find(p => p.time_price === date && p.market === market);
+                        const price = priceEntry ? parseFloat(priceEntry.price) : null;
+                        return isNaN(price) ? null : price; // Ensure NaN prices are treated as null for chart
+                    });
+
+                    series.push({
+                        name: market,
+                        type: 'line',
+                        smooth: false, /* Changed to false for straight lines */
+                        data: marketData,
+                        symbol: 'none', /* Removed symbols as per request */
+                        connectNulls: true, /* NEW: Connect line segments even when data is missing (null values) */
+                        lineStyle: {
+                            width: 1.5, /* Thinner line for less density */
+                            shadowColor: 'rgba(0,0,0,0.1)', /* Kept shadow for depth */
+                            shadowBlur: 10
+                        },
+                        areaStyle: {
+                            opacity: 0 /* Set opacity to 0 to remove area fill */
+                        }
+                    });
+                });
+
+                const option = {
+                    title: {
+                        text: `${vegetableSelect.value} ${chartTitleMarketPart} ${regionSelect.value} 的价格趋势`,
+                        subtext: `日期范围: ${startDateInput.value} - ${endDateInput.value}`,
+                        left: 'center',
+                        textStyle: {
+                            color: '#1f2937', /* Dark text color for light theme */
+                            fontWeight: 'bold',
+                            fontSize: 20
+                        }
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        formatter: function (params) {
+                            let tooltipContent = '';
+                            if (params.length > 0) {
+                                const dataPoint = params[0]; // Get the first series' data point at this axis index
+                                tooltipContent += `市场: ${dataPoint.seriesName}<br/>`; // Display market name
+                                tooltipContent += `日期: ${dataPoint.name}<br/>`;     // Display date
+                                if (dataPoint.value !== null && typeof dataPoint.value !== 'undefined') {
+                                    tooltipContent += `价格: ${dataPoint.value.toFixed(2)} 元/公斤`; // Display price
+                                } else {
+                                    tooltipContent += `价格: 暂无数据`; // Handle null price
+                                }
+                            }
+                            return tooltipContent === '' ? '无数据可显示' : tooltipContent;
+                        },
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)', /* Lighter tooltip background */
+                        borderColor: '#d1d5db',
+                        borderWidth: 1,
+                        textStyle: {
+                            color: '#374151' /* Dark text in tooltip */
+                        },
+                        extraCssText: 'box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);'
+                    },
+                    legend: {
+                        data: markets,
+                        type: 'scroll',
+                        top: 'bottom',
+                        padding: [15, 0, 0, 0],
+                        textStyle: {
+                            color: '#374151' /* Dark legend text */
+                        }
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '15%',
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: dates,
+                        axisLabel: {
+                            color: '#6b7280', /* Darker gray X-axis labels */
+                            rotate: 45,
+                            align: 'right'
+                        },
+                        axisLine: { lineStyle: { color: '#d1d5db' } }, /* Lighter axis lines */
+                        axisTick: { show: false }
+                    },
+                    yAxis: {
+                        type: 'value',
+                        name: '价格 (元/公斤)',
+                        nameTextStyle: {
+                            color: '#374151',
+                            fontWeight: 'bold'
+                        },
+                        axisLabel: {
+                            color: '#6b7280' /* Darker gray Y-axis labels */
+                        },
+                        axisLine: { show: false },
+                        splitLine: { lineStyle: { color: '#e5e7eb', type: 'solid' } } /* Solid, subtle grid lines */
+                    },
+                    series: series,
+                    color: ECHARTS_COLOR_PALETTE // Use the global color palette here
+                };
+
+                lineChart.setOption(option);
+                lineChart.resize();
+            }
+
+            // --- Render Average Price Bar Chart (ECharts) for Data Exploration module ---
+            function renderAvgPriceBarChart(pricesData) {
+                if (!avgPriceBarChart) {
+                    avgPriceBarChart = echarts.init(document.getElementById('avgPriceBarChartContainer'));
+                }
+                avgPriceBarChart.clear(); // Clear chart before setting new options
+
+                const marketAvgPrices = {};
+                pricesData.forEach(item => {
+                    if (!marketAvgPrices[item.market]) {
+                        marketAvgPrices[item.market] = [];
+                    }
+                    const price = parseFloat(item.price);
+                    if (!isNaN(price)) {
+                        marketAvgPrices[item.market].push(price);
+                    }
+                });
+
+                const markets = Object.keys(marketAvgPrices).sort();
+                const data = markets.map(market => {
+                    const avg = marketAvgPrices[market].length > 0 ? 
+                                marketAvgPrices[market].reduce((sum, p) => sum + p, 0) / marketAvgPrices[market].length : 0;
+                    return parseFloat(avg.toFixed(2));
+                });
+
+                const option = {
+                    title: {
+                        text: `${vegetableSelect.value} 各市场平均价格`,
+                        left: 'center',
+                        textStyle: { color: '#1f2937', fontWeight: 'bold', fontSize: 18 }
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: { type: 'shadow' },
+                        formatter: '{b}: {c} 元/公斤',
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        borderColor: '#d1d5db',
+                        textStyle: { color: '#374151' }
+                    },
+                    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+                    xAxis: { // Changed to value for horizontal bar chart
+                        type: 'value',
+                        name: '平均价格 (元/公斤)',
+                        nameTextStyle: { color: '#374151', fontWeight: 'bold' },
+                        axisLabel: { color: '#6b7280' },
+                        axisLine: { lineStyle: { color: '#d1d5db' } },
+                        splitLine: { lineStyle: { color: '#e5e7eb', type: 'solid' } }
+                    },
+                    yAxis: { // Changed to category for horizontal bar chart
+                        type: 'category',
+                        data: markets,
+                        inverse: true, // Display highest value at top
+                        axisLabel: { color: '#6b7280' },
+                        axisLine: { lineStyle: { color: '#d1d5db' } },
+                        axisTick: { show: false }
+                    },
+                    series: [{
+                        name: '平均价格',
+                        type: 'bar',
+                        data: data,
+                        itemStyle: {
+                            // Changed gradient direction for horizontal bars
+                            color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ 
+                                offset: 0, color: ECHARTS_COLOR_PALETTE[0] // Start color (Indigo)
+                            }, {
+                                offset: 1, color: ECHARTS_COLOR_PALETTE[9] // End color (Blue)
+                            }]),
+                            borderRadius: [0, 5, 5, 0] // Adjusted border radius for horizontal bars
+                        },
+                        emphasis: {
+                            itemStyle: {
+                                color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ // Adjusted gradient direction
+                                    offset: 0, color: '#6a67e5'
+                                }, {
+                                    offset: 1, color: '#5b82f6'
+                                }])
+                            }
+                        }
+                    }],
+                    color: ECHARTS_COLOR_PALETTE
+                };
+                avgPriceBarChart.setOption(option);
+                avgPriceBarChart.resize();
+            }
+
+            // --- Render Average Change Bar Chart (ECharts) for Data Exploration module ---
+            function renderAvgChangeBarChart(pricesData) {
+                if (!avgChangeBarChart) {
+                    avgChangeBarChart = echarts.init(document.getElementById('avgChangeBarChartContainer'));
+                }
+                avgChangeBarChart.clear();
+
+                const marketAvgChanges = {};
+                pricesData.forEach(item => {
+                    if (!marketAvgChanges[item.market]) {
+                        marketAvgChanges[item.market] = [];
+                    }
+                    const change = parseFloat(item.change);
+                    if (!isNaN(change)) {
+                        marketAvgChanges[item.market].push(change);
+                    }
+                });
+
+                const markets = Object.keys(marketAvgChanges).sort();
+                const data = markets.map(market => {
+                    const avg = marketAvgChanges[market].length > 0 ? 
+                                marketAvgChanges[market].reduce((sum, c) => sum + c, 0) / marketAvgChanges[market].length : 0;
+                    return parseFloat(avg.toFixed(2));
+                });
+
+                const option = {
+                    title: {
+                        text: `${vegetableSelect.value} 各市场平均环比涨跌幅`,
+                        left: 'center',
+                        textStyle: { color: '#1f2937', fontWeight: 'bold', fontSize: 18 }
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: { type: 'shadow' },
+                        formatter: '{b}: {c}%',
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        borderColor: '#d1d5db',
+                        textStyle: { color: '#374151' }
+                    },
+                    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+                    xAxis: { // Changed to value for horizontal bar chart
+                        type: 'value',
+                        name: '平均涨跌幅 (%)',
+                        nameTextStyle: { color: '#374151', fontWeight: 'bold' },
+                        axisLabel: { color: '#6b7280' },
+                        axisLine: { lineStyle: { color: '#d1d5db' } },
+                        splitLine: { lineStyle: { color: '#e5e7eb', type: 'solid' } }
+                    },
+                    yAxis: { // Changed to category for horizontal bar chart
+                        type: 'category',
+                        data: markets,
+                        inverse: true, // Display highest value at top
+                        axisLabel: { color: '#6b7280' },
+                        axisLine: { lineStyle: { color: '#d1d5db' } },
+                        axisTick: { show: false }
+                    },
+                    series: [{
+                        name: '平均涨跌幅',
+                        type: 'bar',
+                        data: data,
+                        itemStyle: {
+                            color: function(params) {
+                                if (params.value > 0) {
+                                    // Red gradient for increase (horizontal direction)
+                                    return new echarts.graphic.LinearGradient(0, 0, 1, 0, [{
+                                        offset: 0, color: '#ef4444'
+                                    }, {
+                                        offset: 1, color: '#fca5a5'
+                                    }]);
+                                } else if (params.value < 0) {
+                                    // Green gradient for decrease (horizontal direction)
+                                    return new echarts.graphic.LinearGradient(0, 0, 1, 0, [{
+                                        offset: 0, color: '#10b981'
+                                    }, {
+                                        offset: 1, color: '#6ee7b7'
+                                    }]);
+                                } else {
+                                    // Grey for no change
+                                    return '#9ca3af';
+                                }
+                            },
+                            borderRadius: [0, 5, 5, 0] // Adjusted border radius for horizontal bars
+                        },
+                        emphasis: {
+                            itemStyle: {
+                                color: function(params) {
+                                    if (params.value > 0) {
+                                        return new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ // Adjusted gradient direction
+                                            offset: 0, color: '#dc2626'
+                                        }, {
+                                            offset: 1, color: '#ef4444'
+                                        }]);
+                                    } else if (params.value < 0) {
+                                        return new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ // Adjusted gradient direction
+                                            offset: 0, color: '#059669'
+                                        }, {
+                                            offset: 1, color: '#10b981'
+                                        }]);
+                                    } else {
+                                        return '#6b7280';
+                                    }
+                                }
+                            }
+                        }
+                    }],
+                    color: ECHARTS_COLOR_PALETTE
+                };
+                avgChangeBarChart.setOption(option);
+                avgChangeBarChart.resize();
+            }
+
+            // --- Render Price Stability Bar Chart (ECharts) for Data Exploration module ---
+            function renderPriceStabilityBarChart(pricesData) {
+                if (!priceStabilityBarChart) {
+                    priceStabilityBarChart = echarts.init(document.getElementById('priceStabilityBarChartContainer'));
+                }
+                priceStabilityBarChart.clear();
+
+                const marketPrices = {}; // Store all prices per market to calculate std dev
+                pricesData.forEach(item => {
+                    if (!marketPrices[item.market]) {
+                        marketPrices[item.market] = [];
+                    }
+                    const price = parseFloat(item.price);
+                    if (!isNaN(price)) {
+                        marketPrices[item.market].push(price);
+                    }
+                });
+
+                const markets = Object.keys(marketPrices).sort();
+                const data = markets.map(market => {
+                    // Calculate standard deviation for each market's prices
+                    const prices = marketPrices[market];
+                    const stdDev = calculateStandardDeviation(prices);
+                    return parseFloat(stdDev.toFixed(2));
+                }).filter(value => !isNaN(value)); // Filter out NaN values
+
+                const option = {
+                    title: {
+                        text: `${vegetableSelect.value} 各市场价格波动性 (标准差)`,
+                        subtext: '标准差越小，价格越稳定',
+                        left: 'center',
+                        textStyle: { color: '#1f2937', fontWeight: 'bold', fontSize: 18 }
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: { type: 'shadow' },
+                        formatter: '{b}: {c}',
+                        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                        borderColor: '#d1d5db',
+                        textStyle: { color: '#374151' }
+                    },
+                    grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+                    xAxis: { // Changed to value for horizontal bar chart
+                        type: 'value',
+                        name: '价格标准差',
+                        nameTextStyle: { color: '#374151', fontWeight: 'bold' },
+                        axisLabel: { color: '#6b7280' },
+                        axisLine: { lineStyle: { color: '#d1d5db' } },
+                        splitLine: { lineStyle: { color: '#e5e7eb', type: 'solid' } }
+                    },
+                    yAxis: { // Changed to category for horizontal bar chart
+                        type: 'category',
+                        data: markets,
+                        inverse: true, // Display highest value at top
+                        axisLabel: { color: '#6b7280' },
+                        axisLine: { lineStyle: { color: '#d1d5db' } },
+                        axisTick: { show: false }
+                    },
+                    series: [{
+                        name: '价格标准差',
+                        type: 'bar',
+                        data: data,
+                        itemStyle: {
+                            // Changed gradient direction for horizontal bars
+                            color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ 
+                                offset: 0, color: ECHARTS_COLOR_PALETTE[3] // Green
+                            }, {
+                                offset: 1, color: ECHARTS_COLOR_PALETTE[8] // Emerald
+                            }]),
+                            borderRadius: [0, 5, 5, 0] // Adjusted border radius for horizontal bars
+                        },
+                        emphasis: {
+                            itemStyle: {
+                                color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [{ // Adjusted gradient direction
+                                    offset: 0, color: '#059669'
+                                }, {
+                                    offset: 1, color: '#22c55e'
+                                }])
+                            }
+                        }
+                    }],
+                    color: ECHARTS_COLOR_PALETTE
+                };
+                priceStabilityBarChart.setOption(option);
+                priceStabilityBarChart.resize();
+            }
+
+            // --- Module Switching Logic ---
+            let currentActiveModule = 'dataExploration'; // Default active module
+
+            function setActiveModule(moduleName) {
+                // Remove 'active' class from all buttons
+                dataExploreBtn.classList.remove('active');
+                marketReportBtn.classList.remove('active');
+                pricePredictionBtn.classList.remove('active'); // NEW: Price Prediction button
+
+                // Hide all modules
+                dataExplorationModule.style.display = 'none';
+                marketReportModule.style.display = 'none';
+                pricePredictionModule.style.display = 'none'; // NEW: Price Prediction module
+
+                // Show selected module and add 'active' class to its button
+                if (moduleName === 'dataExploration') {
+                    dataExplorationModule.style.display = 'block';
+                    dataExploreBtn.classList.add('active');
+                    filterSidebar.classList.add('sidebar-open'); // Ensure sidebar is open on switch
+                    currentActiveModule = 'dataExploration';
+                    resetSidebarForDataExploration(); // Reset sidebar for data exploration
+                } else if (moduleName === 'marketReport') {
+                    marketReportModule.style.display = 'block';
+                    marketReportBtn.classList.add('active');
+                    filterSidebar.classList.add('sidebar-open'); // Ensure sidebar is open on switch
+                    currentActiveModule = 'marketReport';
+                    setupSidebarForMarketReport(); // Setup sidebar for market report
+                } else if (moduleName === 'pricePrediction') { // NEW: Price Prediction module logic
+                    pricePredictionModule.style.display = 'block';
+                    pricePredictionBtn.classList.add('active');
+                    filterSidebar.classList.add('sidebar-open');
+                    currentActiveModule = 'pricePrediction';
+                    setupSidebarForPricePrediction(); // Setup sidebar for price prediction
+                }
+                hideStatusMessage(); // Clear status message on module switch
+            }
+
+            function resetSidebarForDataExploration() {
+                console.log("[SIDEBAR_RESET] Resetting sidebar for Data Exploration.");
+                const filterGrid = dateFilterGroup.querySelector('.grid');
+                if (filterGrid) {
+                    // Restore original date filters
+                    daysSelectContainer.style.display = 'block';
+                    startDateInput.parentElement.style.display = 'block';
+                    endDateInput.parentElement.style.display = 'block';
+                    marketReportYearSelectContainer.style.display = 'none';
+                    marketReportQuarterSelectContainer.style.display = 'none';
+                    marketReportMonthSelectContainer.style.display = 'none';
+                }
+
+                const productLocationGrid = productLocationFilterGroup.querySelector('.grid');
+                if (productLocationGrid) {
+                    // Clear existing children to ensure correct reordering
+                    productLocationGrid.innerHTML = ''; 
+                    // Ensure correct order for Data Exploration
+                    productLocationGrid.appendChild(vegetableSelectContainer);
+                    productLocationGrid.appendChild(regionSelectContainer);
+                    productLocationGrid.appendChild(marketSelectContainer);
+                }
+
+                // Reset dropdowns to their default 'all' or first values
+                populateVegetableSelect(allVarieties, allVarieties[0] || 'all'); // Default to first concrete variety, or 'all' if no varieties
+                populateRegionSelect(allAreas, 'all');
+                loadMarketsByArea('all'); // Load markets for 'all' area (which usually means empty list or just "所有市场")
+                daysSelect.value = '7'; // Default to 7 days
+                setInitialDates(); // Reset date inputs
+            }
+
+            async function setupSidebarForMarketReport() {
+                console.log("[SIDEBAR_SETUP] Setting up sidebar for Market Report.");
+                const filterGrid = dateFilterGroup.querySelector('.grid');
+                if (filterGrid) {
+                    // Hide original date filters and show new ones
+                    daysSelectContainer.style.display = 'none';
+                    startDateInput.parentElement.style.display = 'none';
+                    endDateInput.parentElement.style.display = 'none';
+                    marketReportYearSelectContainer.style.display = 'block';
+                    marketReportQuarterSelectContainer.style.display = 'block';
+                    marketReportMonthSelectContainer.style.display = 'block';
+                }
+
+                const productLocationGrid = productLocationFilterGroup.querySelector('.grid');
+                if (productLocationGrid) {
+                    // Clear existing children to ensure correct reordering
+                    productLocationGrid.innerHTML = ''; 
+                    // Change order for Market Report
+                    productLocationGrid.appendChild(regionSelectContainer); // 1st: Region
+                    productLocationGrid.appendChild(marketSelectContainer); // 2nd: Market
+                    productLocationGrid.appendChild(vegetableSelectContainer); // 3rd: Vegetable
+                }
+
+                // Set default region to '河南省'
+                populateRegionSelect(allAreas, '河南省');
+                await loadMarketsByArea('河南省'); // Load markets specifically for Henan
+                populateVegetableSelect(allVarieties, 'all'); // Default to "所有蔬菜" for Market Report
+
+                // Populate years for market report, default to 2025
+                const currentYear = new Date().getFullYear();
+                marketReportYearSelect.innerHTML = '';
+                for (let i = currentYear - 5; i <= currentYear + 5; i++) { // From 5 years ago to 5 years in future
+                    const option = document.createElement('option');
+                    option.value = i;
+                    option.textContent = `${i}年`;
+                    marketReportYearSelect.appendChild(option);
+                }
+                marketReportYearSelect.value = '2025'; // Default to 2025
+
+                // Reset quarter and month selects
+                marketReportQuarterSelect.value = 'all';
+                populateMonthsForQuarter('all'); // Initially populate for all quarters
+
+                // Hide the market report content placeholders initially
+                marketReportContentDiv.style.display = 'none';
+
+                // Immediately trigger a query for market report, using default values
+                queryPrices();
+            }
+
+            async function setupSidebarForPricePrediction() {
+                console.log("[SIDEBAR_SETUP] Setting up sidebar for Price Prediction.");
+                const filterGrid = dateFilterGroup.querySelector('.grid');
+                if (filterGrid) {
+                    // Restore original date filters (same as Data Exploration for now)
+                    daysSelectContainer.style.display = 'block';
+                    startDateInput.parentElement.style.display = 'block';
+                    endDateInput.parentElement.style.display = 'block';
+                    marketReportYearSelectContainer.style.display = 'none';
+                    marketReportQuarterSelectContainer.style.display = 'none';
+                    marketReportMonthSelectContainer.style.display = 'none';
+                }
+
+                const productLocationGrid = productLocationFilterGroup.querySelector('.grid');
+                if (productLocationGrid) {
+                    // Clear existing children to ensure correct reordering
+                    productLocationGrid.innerHTML = ''; 
+                    // Order for Price Prediction (similar to Data Exploration for now)
+                    productLocationGrid.appendChild(vegetableSelectContainer);
+                    productLocationGrid.appendChild(regionSelectContainer);
+                    productLocationGrid.appendChild(marketSelectContainer);
+                }
+
+                // Reset dropdowns to their default 'all' or first values
+                populateVegetableSelect(allVarieties, allVarieties[0] || 'all'); // Default to first concrete variety, or 'all' if no varieties
+                populateRegionSelect(allAreas, 'all');
+                await loadMarketsByArea('all'); // Load markets for 'all' area (which usually means empty list or just "所有市场")
+                daysSelect.value = '7'; // Default to 7 days
+                setInitialDates(); // Reset date inputs
+
+                // Hide the price prediction content placeholders initially (or clear them)
+                document.getElementById('pricePredictionContent').style.display = 'none';
+                
+                // Do not immediately trigger queryPrices here, as it might behave differently for prediction.
+                // User will explicitly click Query Data.
+            }
+
+
+            // Function to populate months based on selected quarter
+            function populateMonthsForQuarter(quarter) {
+                marketReportMonthSelect.innerHTML = '';
+                let months = [];
+
+                const allMonthsOption = document.createElement('option');
+                allMonthsOption.value = 'all';
+                allMonthsOption.textContent = '所有月份';
+                marketReportMonthSelect.appendChild(allMonthsOption);
+
+                if (quarter === 'Q1') {
+                    months = [{ value: 1, text: '一月' }, { value: 2, text: '二月' }, { value: 3, text: '三月' }];
+                } else if (quarter === 'Q2') {
+                    months = [{ value: 4, text: '四月' }, { value: 5, text: '五月' }, { value: 6, text: '六月' }];
+                } else if (quarter === 'Q3') {
+                    months = [{ value: 7, text: '七月' }, { value: 8, text: '八月' }, { value: 9, text: '九月' }];
+                } else if (quarter === 'Q4') {
+                    months = [{ value: 10, text: '十月' }, { value: 11, text: '十一月' }, { value: 12, text: '十二月' }];
+                } else { // 'all' quarters
+                    months = [
+                        { value: 1, text: '一月' }, { value: 2, text: '二月' }, { value: 3, text: '三月' },
+                        { value: 4, text: '四月' }, { value: 5, text: '五月' }, { value: 6, text: '六月' },
+                        { value: 7, text: '七月' }, { value: 8, text: '八月' }, { value: 9, text: '九月' },
+                        { value: 10, text: '十月' }, { value: 11, text: '十一月' }, { value: 12, text: '十二月' }
+                    ];
+                }
+
+                months.forEach(month => {
+                    const option = document.createElement('option');
+                    option.value = month.value;
+                    option.textContent = month.text;
+                    marketReportMonthSelect.appendChild(option);
+                });
+                marketReportMonthSelect.value = 'all'; // Default to all months for the quarter/year
+            }
+
+
+            // --- Event Listeners ---
+            regionSelect.addEventListener('change', () => loadMarketsByArea(regionSelect.value));
+            daysSelect.addEventListener('change', function() {
+                if (this.value === 'custom') {
+                    startDateInput.disabled = false;
+                    endDateInput.disabled = false;
+                } else {
+                    startDateInput.disabled = true;
+                    endDateInput.disabled = true;
+                    setInitialDates(); // Reset dates when not custom
+                }
+            });
+
+            // New event listeners for market report date filters
+            marketReportQuarterSelect.addEventListener('change', function() {
+                populateMonthsForQuarter(this.value);
+                queryPrices(); // Trigger a query when quarter changes
+            });
+            marketReportYearSelect.addEventListener('change', queryPrices); // Trigger query when year changes
+            marketReportMonthSelect.addEventListener('change', queryPrices); // Trigger query when month changes
+
+
+            queryBtn.addEventListener('click', queryPrices);
+
+            exportBtn.addEventListener('click', () => {
+                const selectedVariety = vegetableSelect.value;
+                const selectedArea = regionSelect.value;
+                const selectedMarket = marketSelect.value;
+                let startDate = '';
+                let endDate = '';
+                let queryParams = new URLSearchParams();
+
+                if (currentActiveModule === 'dataExploration' || currentActiveModule === 'pricePrediction') { // Include price prediction module here
+                    const selectedDays = daysSelect.value;
+                    if (selectedDays === 'custom') {
+                        startDate = startDateInput.value;
+                        endDate = endDateInput.value;
+                    } else {
+                        const today = new Date();
+                        endDate = today.toISOString().split('T')[0];
+                        const pastDate = new Date(today);
+                        pastDate.setDate(today.getDate() - parseInt(selectedDays));
+                        startDate = pastDate.toISOString().split('T')[0];
+                    }
+                    if (selectedDays !== 'custom') {
+                        queryParams.append('days', selectedDays);
+                    }
+                } else if (currentActiveModule === 'marketReport') {
+                    const selectedYear = marketReportYearSelect.value;
+                    const selectedQuarter = marketReportQuarterSelect.value;
+                    const selectedMonth = marketReportMonthSelect.value;
+
+                    if (selectedYear === 'all') { // If "all years" is selected, take current year
+                        const currentYear = new Date().getFullYear();
+                        startDate = `${currentYear}-01-01`;
+                        endDate = `${currentYear}-12-31`;
+                    } else {
+                        if (selectedMonth !== 'all') {
+                            // Specific month selected
+                            const month = parseInt(selectedMonth);
+                            const year = parseInt(selectedYear);
+                            const firstDay = new Date(year, month - 1, 1);
+                            const lastDay = new Date(year, month, 0); // Last day of the selected month
+                            startDate = firstDay.toISOString().split('T')[0];
+                            endDate = lastDay.toISOString().split('T')[0];
+                        } else if (selectedQuarter !== 'all') {
+                            // Specific quarter selected
+                            const year = parseInt(selectedYear);
+                            let startMonth, endMonth;
+                            if (selectedQuarter === 'Q1') { startMonth = 1; endMonth = 3; }
+                            else if (selectedQuarter === 'Q2') { startMonth = 4; endMonth = 6; }
+                            else if (selectedQuarter === 'Q3') { startMonth = 7; endMonth = 9; }
+                            else if (selectedQuarter === 'Q4') { startMonth = 10; endMonth = 12; }
+
+                            const firstDay = new Date(year, startMonth - 1, 1);
+                            const lastDay = new Date(year, endMonth, 0);
+                            startDate = firstDay.toISOString().split('T')[0];
+                            endDate = lastDay.toISOString().split('T')[0];
+                        } else {
+                            // Only year selected ("所有季度", "所有月份")
+                            const year = parseInt(selectedYear);
+                            startDate = `${year}-01-01`;
+                            endDate = `${year}-12-31`;
+                        }
+                    }
+                }
+
+                // For export, if 'all' vegetables are selected in market report, do not add the variety parameter
+                if (!(currentActiveModule === 'marketReport' && selectedVariety === 'all')) {
+                    queryParams.append('variety', selectedVariety);
+                }
+                
+                queryParams.append('area', selectedArea);
+                queryParams.append('market', selectedMarket);
+                queryParams.append('startDate', startDate);
+                queryParams.append('endDate', endDate);
+                
+                // Direct URL navigation for download
+                window.location.href = `/api/export?${queryParams.toString()}`;
+            });
+
+            // Sidebar hover functionality (Applies to BOTH modules now)
+            leftEdgeTrigger.addEventListener('mouseenter', () => {
+                // No conditional check needed here, sidebar opens on hover regardless of module
+                filterSidebar.classList.add('sidebar-open');
+            });
+
+            filterSidebar.addEventListener('mouseleave', () => {
+                // No conditional check needed here, sidebar closes on mouseleave regardless of module
+                filterSidebar.classList.remove('sidebar-open');
+            });
+
+            // Module switcher buttons
+            dataExploreBtn.addEventListener('click', () => setActiveModule('dataExploration'));
+            marketReportBtn.addEventListener('click', () => setActiveModule('marketReport'));
+            pricePredictionBtn.addEventListener('click', () => setActiveModule('pricePrediction')); // NEW: Price Prediction button event listener
+
+
+            // --- Execute on page load ---
+            document.addEventListener('DOMContentLoaded', () => {
+                console.log("[INIT] Page loaded, initializing.");
+                setInitialDates();
+                loadSelectOptions().then(() => {
+                    // After select options are loaded, set the initial active module
+                    // Default to 'dataExploration' on first load
+                    setActiveModule('dataExploration'); 
+                    console.log("[INIT] Initial module set and query triggered.");
+                });
+
+                // Add resize listener for ECharts
+                window.addEventListener('resize', () => {
+                    if (myChart) myChart.resize();
+                    if (lineChart) lineChart.resize();
+                    if (avgPriceBarChart) avgPriceBarChart.resize();
+                    if (avgChangeBarChart) avgChangeBarChart.resize();
+                    if (priceStabilityBarChart) priceStabilityBarChart.resize(); // Resize Data Exploration's chart
+                    if (priceIncreaseRankingChart) priceIncreaseRankingChart.resize(); // Resize Market Report chart
+                    if (monthlyPriceTrendChart) monthlyPriceTrendChart.resize(); // Resize Market Report chart
+                    if (annualAvgPriceRankingChart) annualAvgPriceRankingChart.resize(); // Resize Market Report chart
+                    if (priceStabilityRankingChart) priceStabilityRankingChart.resize(); // Resize Market Report chart
+                    if (top5PricePieChart) top5PricePieChart.resize(); // Resize new price pie chart
+                    if (top5StabilityPieChart) top5StabilityPieChart.resize(); // Resize new stability pie chart
+                });
+            });
+        })(); // End of IIFE
+    </script>
+</body>
+</html>
