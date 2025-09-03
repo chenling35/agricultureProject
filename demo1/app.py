@@ -23,7 +23,7 @@ DB_CONFIG = {
     'host': 'rm-cn-ow74bdsj90001x5o.rwlb.rds.aliyuncs.com', # <<<<<<< 请务必将此占位符替换为您的RDS真正的外网连接地址 >>>>>>>
     'port': 3306,                               # 端口通常是 3306
     'user': 'adook',                            # 替换为您的 DMS 数据库用户名
-    'password': 'Ykq123999',                     # 替换为您的 DMS 数据库密码
+    'password': 'Ykq123456',                     # 替换为您的 DMS 数据库密码
     'database': 'vegetable_market',             # 替换为您在 DMS 上使用的实际数据库名称
     'charset': 'utf8mb4',                       # 推荐使用 utf8mb4 编码以支持更广泛的字符集，包括中文
     'cursorclass': pymysql.cursors.DictCursor   # 使用 DictCursor 获取字典形式的结果

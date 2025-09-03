@@ -23,7 +23,7 @@ logger = logging.getLogger("vegetable_crawler")
 DB_CONFIG = {
     'host': 'localhost',
     'user': 'root',
-    'password': '135781012zhu',
+    'password': '123456',
     'database': 'vegetable_market',
     'charset': 'utf8mb4'
 }
